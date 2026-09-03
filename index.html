@@ -1,0 +1,211 @@
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#111827">
+  <title>Treino de força</title>
+  <style>
+    :root { --bg:#f3f4f6; --card:#fff; --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --accent:#2563eb; --soft:#eff6ff; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--ink); font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    header { background:#111827; color:white; padding:22px 16px 18px; position:sticky; top:0; z-index:5; }
+    h1 { margin:0 0 4px; font-size:24px; }
+    h2 { margin:0; font-size:20px; }
+    p { margin:6px 0; }
+    .subtitle { color:#d1d5db; font-size:14px; }
+    main { max-width:720px; margin:auto; padding:16px; }
+    .weekbar { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:14px; }
+    button { border:0; border-radius:10px; padding:10px 13px; font-weight:600; background:#e5e7eb; color:var(--ink); font-size:14px; }
+    button.primary { background:var(--accent); color:white; }
+    button.danger { background:#fee2e2; color:#991b1b; }
+    .weeklabel { text-align:center; font-weight:700; flex:1; }
+    .schedule { display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-bottom:16px; }
+    .day { text-align:center; padding:8px 2px; border-radius:9px; background:white; border:1px solid var(--line); font-size:12px; }
+    .day b { display:block; font-size:11px; color:var(--muted); }
+    .day.active { background:var(--soft); border-color:#93c5fd; }
+    .session { display:none; }
+    .session.active { display:block; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:12px; box-shadow:0 1px 2px #00000008; }
+    .sessionhead { display:flex; justify-content:space-between; align-items:start; gap:10px; margin-bottom:12px; }
+    .focus { color:var(--muted); font-size:14px; }
+    .complete { display:flex; align-items:center; gap:8px; white-space:nowrap; font-size:13px; }
+    input[type=checkbox] { width:20px; height:20px; accent-color:var(--accent); }
+    .block { margin:14px 0; padding-top:10px; border-top:1px solid var(--line); }
+    .blocktitle { font-size:13px; font-weight:800; color:var(--accent); margin-bottom:8px; text-transform:uppercase; letter-spacing:.03em; }
+    .exercise { display:grid; grid-template-columns:28px 1fr; gap:8px; padding:10px 0; border-bottom:1px solid #f0f0f0; }
+    .exercise:last-child { border-bottom:0; }
+    .exercise strong { display:block; font-size:15px; }
+    .prescription { color:var(--muted); font-size:13px; margin-top:3px; }
+    textarea { width:100%; min-height:54px; margin-top:8px; padding:9px; border:1px solid var(--line); border-radius:9px; resize:vertical; font:14px inherit; }
+    .notes label { display:block; font-size:13px; font-weight:700; margin:4px 0; }
+    .saved { color:#166534; font-size:13px; margin-left:8px; opacity:0; transition:opacity .2s; }
+    .saved.show { opacity:1; }
+    footer { color:var(--muted); font-size:13px; text-align:center; padding:10px 0 30px; }
+    @media (max-width:480px) { main { padding:12px; } .schedule { gap:3px; } .day { font-size:11px; padding:7px 1px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Treino de força</h1>
+    <div class="subtitle">Marque o que fez e registre repetições, nível e comentários.</div>
+  </header>
+
+  <main>
+    <div class="weekbar">
+      <button id="prev">‹ Semana</button>
+      <div class="weeklabel" id="weekLabel"></div>
+      <button id="next">Semana ›</button>
+    </div>
+
+    <div class="schedule" id="schedule"></div>
+    <div id="sessions"></div>
+
+    <button class="danger" id="clearWeek">Limpar registros desta semana</button>
+    <footer>Os registros ficam salvos neste dispositivo, no navegador.</footer>
+  </main>
+
+  <script>
+    const sessions = [
+      {
+        id:'d1', day:'SEG', title:'D1 — Glúteos, pernas e empurrar', focus:'RDL, pistol e flexão',
+        blocks:[
+          { name:'Bi-set A', rest:'90 s após A1 + A2', exercises:[
+            ['RDL unilateral com apoio','3 × 5–8 por perna · RIR 3'],
+            ['Flexão','3 × 5–8 · RIR 2–3']
+          ]},
+          { name:'Tri-set B', rest:'60–90 s após cada rodada', exercises:[
+            ['Pistol squat com apoio','2 × 4–6 por perna · RIR 3'],
+            ['Abdução com mini band','2 × 15–25 por lado · RIR 2–3'],
+            ['Calf raise','2 × 12–20 · RIR 2']
+          ]}
+        ]
+      },
+      { id:'b1', day:'TER', title:'Boulder A', focus:'Técnica e intensidade moderada', blocks:[
+        { name:'Sessão', rest:'Pare antes da exaustão dos dedos', exercises:[['Boulder','30 min · registre graus/problemas tentados']] }
+      ]},
+      {
+        id:'d2', day:'QUA', title:'D2 — Unilateral, glúteo médio e core', focus:'Sessão leve após o boulder',
+        blocks:[
+          { name:'Bi-set A', rest:'60 s após A1 + A2', exercises:[
+            ['High step assistido','2 × 5–8 por perna · RIR 3'],
+            ['Dead bug','2 × 8–10 por lado · RIR 3']
+          ]},
+          { name:'Tri-set B', rest:'45–60 s após cada rodada', exercises:[
+            ['Glute bridge com pausa de 2 s','2 × 8–12 · RIR 3'],
+            ['Abdução com mini band','2 × 15–25 por lado · RIR 3'],
+            ['Rotação cubana','2 × 12–15 · RIR 4']
+          ]}
+        ]
+      },
+      { id:'b2', day:'QUI', title:'Boulder B', focus:'Sessão mais intensa, sem excesso de tentativas', blocks:[
+        { name:'Sessão', rest:'Descanso completo entre tentativas', exercises:[['Boulder','30 min · registre graus/problemas tentados']] }
+      ]},
+      {
+        id:'d3', day:'SEX', title:'D3 — Posterior, glúteos e empurrar', focus:'Hip thrust, posteriores e sissy squat',
+        blocks:[
+          { name:'Bi-set A', rest:'90 s após A1 + A2', exercises:[
+            ['Hamstring curl ou heel walkout','3 × 5–8 · RIR 3'],
+            ['Flexão','3 × 5–8 · RIR 2–3']
+          ]},
+          { name:'Tri-set B', rest:'75–90 s após cada rodada', exercises:[
+            ['Hip thrust ou glute bridge','2 × 8–12 · RIR 2–3'],
+            ['Sissy squat assistido','2 × 6–10 · RIR 3'],
+            ['Calf raise','2 × 12–20 · RIR 2']
+          ]}
+        ]
+      },
+      {
+        id:'d4', day:'SAB', title:'D4 — Puxada controlada', focus:'Pendurada alternada, excêntrica e remada',
+        blocks:[
+          { name:'Bi-set A', rest:'90–120 s', exercises:[
+            ['Pendurada ativa ou passiva','1 × tempo máximo técnico · alternar por semana'],
+            ['Rotação cubana','2 × 12–15 · RIR 4']
+          ]},
+          { name:'Tri-set B', rest:'2–3 min após cada rodada', exercises:[
+            ['Barra excêntrica','2 × 1 · descida de 5–8 s'],
+            ['Single-leg glute bridge','2 × 8–10 por perna · RIR 3'],
+            ['Remada invertida','2 × 6–8 · RIR 3']
+          ]}
+        ]
+      }
+    ];
+
+    let week = monday(new Date());
+    let activeIndex = Math.min((new Date().getDay() + 6) % 7, 6);
+    if (activeIndex === 6) activeIndex = 0;
+
+    function monday(date) {
+      const d = new Date(date); d.setHours(12,0,0,0);
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
+      return d;
+    }
+    function key(date) { return date.toISOString().slice(0,10); }
+    function dateLabel(date) { return date.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); }
+    function storageKey(sessionId) { return `treino-${key(week)}-${sessionId}`; }
+    function load(sessionId) { return JSON.parse(localStorage.getItem(storageKey(sessionId)) || '{}'); }
+    function save(sessionId, data) { localStorage.setItem(storageKey(sessionId), JSON.stringify(data)); }
+
+    function render() {
+      document.getElementById('weekLabel').textContent = `Semana de ${dateLabel(week)}`;
+      const schedule = document.getElementById('schedule');
+      schedule.innerHTML = '';
+      sessions.forEach((s,i) => {
+        const el = document.createElement('button');
+        el.className = `day ${i===activeIndex?'active':''}`;
+        el.innerHTML = `<b>${s.day}</b>${s.title.split('—')[0].trim()}`;
+        el.onclick = () => { activeIndex=i; render(); };
+        schedule.appendChild(el);
+      });
+
+      const container = document.getElementById('sessions');
+      container.innerHTML = '';
+      sessions.forEach((s,si) => {
+        const data = load(s.id);
+        const section = document.createElement('section');
+        section.className = `session ${si===activeIndex?'active':''}`;
+        let html = `<div class="card"><div class="sessionhead"><div><h2>${s.title}</h2><div class="focus">${s.focus}</div></div><label class="complete"><input type="checkbox" data-session="${s.id}" ${data.session?'checked':''}> Feita</label></div>`;
+        s.blocks.forEach((block,bi) => {
+          html += `<div class="block"><div class="blocktitle">${block.name} · ${block.rest}</div>`;
+          block.exercises.forEach((ex,ei) => {
+            const id = `${bi}-${ei}`;
+            html += `<div class="exercise"><input type="checkbox" data-exercise="${s.id}|${id}" ${data[id]?.done?'checked':''}><div><strong>${ex[0]}</strong><div class="prescription">${ex[1]}</div><textarea data-note="${s.id}|${id}" placeholder="Repetições realizadas, nível, dificuldade ou comentário...">${data[id]?.note||''}</textarea></div></div>`;
+          });
+          html += `</div>`;
+        });
+        html += `<div class="notes"><label>Comentário da sessão</label><textarea data-session-note="${s.id}" placeholder="Como foi a sessão? Dor, energia, recuperação...">${data.note||''}</textarea><span class="saved" id="saved-${s.id}">Salvo</span></div></div>`;
+        section.innerHTML = html;
+        container.appendChild(section);
+      });
+      bindEvents();
+    }
+
+    function bindEvents() {
+      document.querySelectorAll('[data-session]').forEach(el => el.onchange = () => {
+        const id=el.dataset.session, data=load(id); data.session=el.checked; save(id,data); flash(id);
+      });
+      document.querySelectorAll('[data-exercise]').forEach(el => el.onchange = () => {
+        const [id,ex]=el.dataset.exercise, data=load(id); data[ex]=data[ex]||{}; data[ex].done=el.checked; save(id,data); flash(id);
+      });
+      document.querySelectorAll('[data-note]').forEach(el => el.oninput = () => {
+        const [id,ex]=el.dataset.note, data=load(id); data[ex]=data[ex]||{}; data[ex].note=el.value; save(id,data); flash(id);
+      });
+      document.querySelectorAll('[data-session-note]').forEach(el => el.oninput = () => {
+        const id=el.dataset.sessionNote, data=load(id); data.note=el.value; save(id,data); flash(id);
+      });
+    }
+    function flash(id) { const el=document.getElementById(`saved-${id}`); if(!el)return; el.classList.add('show'); setTimeout(()=>el.classList.remove('show'),800); }
+
+    document.getElementById('prev').onclick = () => { week.setDate(week.getDate()-7); render(); };
+    document.getElementById('next').onclick = () => { week.setDate(week.getDate()+7); render(); };
+    document.getElementById('clearWeek').onclick = () => {
+      if (!confirm('Apagar todos os registros desta semana?')) return;
+      sessions.forEach(s => localStorage.removeItem(storageKey(s.id)));
+      render();
+    };
+    render();
+  </script>
+</body>
