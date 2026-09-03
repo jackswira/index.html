@@ -1,4 +1,4 @@
-```html
+
 <!doctype html>
 <html lang="pt-BR">
 <head>
@@ -336,11 +336,13 @@
 <body>
 
 <header>
+
   <h1>Treino de força</h1>
 
   <div class="subtitle">
     Marque o que fez e registre repetições, nível e comentários.
   </div>
+
 </header>
 
 
@@ -386,6 +388,10 @@
 
 const sessions = [
 
+  /* ============================================================
+     D1
+     ============================================================ */
+
   {
     id:'d1',
     day:'SEG',
@@ -408,7 +414,8 @@ const sessions = [
 
           {
             name:'Flexão',
-            prescription:'3 × 5–8 · RIR 2–3'
+            prescription:'3 × 5–8 · RIR 2–3',
+            youtubeId:'8FD89xF4l1A'
           }
 
         ]
@@ -423,7 +430,8 @@ const sessions = [
 
           {
             name:'Pistol squat com apoio',
-            prescription:'2 × 4–6 por perna · RIR 3'
+            prescription:'2 × 4–6 por perna · RIR 3',
+            youtubeId:'fUGQ7oMEIFI'
           },
 
           {
@@ -434,7 +442,8 @@ const sessions = [
 
           {
             name:'Calf raise',
-            prescription:'2 × 12–20 · RIR 2'
+            prescription:'2 × 12–20 · RIR 2',
+            youtubeId:'PJGXyldAWk4'
           }
 
         ]
@@ -443,6 +452,10 @@ const sessions = [
     ]
   },
 
+
+  /* ============================================================
+     BOULDER A
+     ============================================================ */
 
   {
     id:'b1',
@@ -470,6 +483,10 @@ const sessions = [
   },
 
 
+  /* ============================================================
+     D2
+     ============================================================ */
+
   {
     id:'d2',
     day:'QUA',
@@ -486,7 +503,8 @@ const sessions = [
 
           {
             name:'High step assistido',
-            prescription:'2 × 5–8 por perna · RIR 3'
+            prescription:'2 × 5–8 por perna · RIR 3',
+            youtubeId:'j8KN0jwWaRA'
           },
 
           {
@@ -507,7 +525,8 @@ const sessions = [
 
           {
             name:'Glute bridge com pausa de 2 s',
-            prescription:'2 × 8–12 · RIR 3'
+            prescription:'2 × 8–12 · RIR 3',
+            youtubeId:'WEvLyLsV0xs'
           },
 
           {
@@ -528,6 +547,10 @@ const sessions = [
     ]
   },
 
+
+  /* ============================================================
+     BOULDER B
+     ============================================================ */
 
   {
     id:'b2',
@@ -555,6 +578,10 @@ const sessions = [
   },
 
 
+  /* ============================================================
+     D3
+     ============================================================ */
+
   {
     id:'d3',
     day:'SEX',
@@ -576,7 +603,8 @@ const sessions = [
 
           {
             name:'Flexão',
-            prescription:'3 × 5–8 · RIR 2–3'
+            prescription:'3 × 5–8 · RIR 2–3',
+            youtubeId:'8FD89xF4l1A'
           }
 
         ]
@@ -603,7 +631,8 @@ const sessions = [
 
           {
             name:'Calf raise',
-            prescription:'2 × 12–20 · RIR 2'
+            prescription:'2 × 12–20 · RIR 2',
+            youtubeId:'PJGXyldAWk4'
           }
 
         ]
@@ -612,6 +641,10 @@ const sessions = [
     ]
   },
 
+
+  /* ============================================================
+     D4
+     ============================================================ */
 
   {
     id:'d4',
@@ -1215,15 +1248,6 @@ function bindEvents() {
           !container.classList.contains('show')
         ) {
 
-          /*
-           * Usa o domínio privacy-enhanced
-           * do YouTube.
-           *
-           * O ID funciona tanto para
-           * vídeos normais quanto para
-           * Shorts.
-           */
-
           iframe.src =
             `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&playsinline=1`;
 
@@ -1245,18 +1269,11 @@ function bindEvents() {
 
         else {
 
-          /*
-           * Remove o src para parar
-           * completamente o vídeo.
-           */
-
           iframe.src = '';
-
 
           container.classList.remove(
             'show'
           );
-
 
           button.textContent =
             '▶ Ver vídeo de execução';
@@ -1371,4 +1388,3 @@ render();
 
 </body>
 </html>
-```
