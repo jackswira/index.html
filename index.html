@@ -1,497 +1,758 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Treino de força</title>
+  <title>Treino de força</title>
 
-<style>
-  * {
-    box-sizing: border-box;
-  }
+  <style>
+    :root {
+      --bg: #f5f5f3;
+      --card: #ffffff;
+      --text: #202124;
+      --muted: #6b6b6b;
+      --border: #deded8;
+      --accent: #222;
+      --soft: #eeeeea;
+      --today: #e8f0fe;
+      --today-border: #8ab4f8;
+      --success: #e8f5e9;
+      --success-border: #81c784;
+    }
 
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f5f5f5;
-    color: #222;
-    line-height: 1.45;
-  }
+    * {
+      box-sizing: border-box;
+    }
 
-  .container {
-    max-width: 760px;
-    margin: 0 auto;
-    padding: 20px 16px 40px;
-  }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+      line-height: 1.5;
+    }
 
-  header {
-    margin-bottom: 16px;
-  }
+    button,
+    textarea,
+    input {
+      font: inherit;
+    }
 
-  h1 {
-    margin: 0 0 12px;
-    font-size: 28px;
-  }
+    .app {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 20px 16px 50px;
+    }
 
-  h2 {
-    margin: 0;
-    font-size: 22px;
-  }
-
-  h3 {
-    margin: 18px 0 8px;
-    font-size: 17px;
-  }
-
-  .top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .language-switch {
-    display: flex;
-    gap: 5px;
-  }
-
-  .lang-btn {
-    border: 1px solid #ccc;
-    background: white;
-    color: #555;
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 13px;
-    cursor: pointer;
-  }
-
-  .lang-btn.active {
-    background: #222;
-    color: white;
-    border-color: #222;
-  }
-
-  .week-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    margin: 14px 0;
-  }
-
-  .week-nav button,
-  .clear-btn {
-    border: 1px solid #ccc;
-    background: white;
-    color: #222;
-    border-radius: 9px;
-    padding: 9px 12px;
-    cursor: pointer;
-  }
-
-  .week-nav button:hover,
-  .clear-btn:hover {
-    background: #eee;
-  }
-
-  .week-label {
-    font-weight: bold;
-    text-align: center;
-  }
-
-  .days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    margin-bottom: 18px;
-  }
-
-  .day-btn {
-    border: 1px solid #ddd;
-    background: white;
-    border-radius: 9px;
-    padding: 8px 3px;
-    cursor: pointer;
-    font-size: 12px;
-  }
-
-  .day-btn.active {
-    background: #222;
-    color: white;
-    border-color: #222;
-  }
-
-  .day-name {
-    font-weight: bold;
-    display: block;
-  }
-
-  .day-date {
-    display: block;
-    margin-top: 2px;
-    opacity: 0.8;
-  }
-
-  .session {
-    background: white;
-    border-radius: 14px;
-    padding: 18px;
-    box-shadow: 0 1px 4px rgba(0,0,0,.08);
-  }
-
-  .session-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-    margin-bottom: 14px;
-  }
-
-  .session-title {
-    font-size: 21px;
-    font-weight: bold;
-  }
-
-  .session-type {
-    font-size: 12px;
-    color: #666;
-    margin-top: 3px;
-  }
-
-  .complete-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    white-space: nowrap;
-    font-size: 13px;
-  }
-
-  .block {
-    margin-top: 16px;
-  }
-
-  .block-title {
-    font-weight: bold;
-    margin-bottom: 8px;
-    font-size: 15px;
-  }
-
-  .exercise {
-    border: 1px solid #e1e1e1;
-    border-radius: 11px;
-    padding: 12px;
-    margin-bottom: 8px;
-    background: #fafafa;
-  }
-
-  .exercise-top {
-    display: flex;
-    gap: 9px;
-    align-items: flex-start;
-  }
-
-  .exercise-check {
-    margin-top: 3px;
-  }
-
-  .exercise-name {
-    font-weight: bold;
-    flex: 1;
-  }
-
-  .prescription {
-    color: #555;
-    font-size: 13px;
-    margin-top: 3px;
-  }
-
-  .video-button {
-    display: inline-block;
-    margin-top: 9px;
-    border: 1px solid #ccc;
-    background: white;
-    border-radius: 8px;
-    padding: 7px 9px;
-    font-size: 12px;
-    cursor: pointer;
-  }
-
-  .video-button:hover {
-    background: #eee;
-  }
-
-  .video-container {
-    display: none;
-    margin-top: 10px;
-  }
-
-  .video-container.show {
-    display: block;
-  }
-
-  .video-container iframe {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    border: 0;
-    border-radius: 9px;
-  }
-
-  .youtube-link {
-    display: inline-block;
-    margin-top: 6px;
-    font-size: 12px;
-    color: #b00000;
-    text-decoration: none;
-  }
-
-  .youtube-link:hover {
-    text-decoration: underline;
-  }
-
-  textarea {
-    width: 100%;
-    min-height: 80px;
-    resize: vertical;
-    border: 1px solid #ccc;
-    border-radius: 9px;
-    padding: 10px;
-    font: inherit;
-    font-size: 13px;
-  }
-
-  .set-guide {
-    margin-top: 18px;
-    padding: 14px;
-    background: #f0f0f0;
-    border-radius: 11px;
-    font-size: 13px;
-  }
-
-  .set-guide strong:first-child {
-    display: block;
-    font-size: 15px;
-    margin-bottom: 8px;
-  }
-
-  .set-guide p {
-    margin: 8px 0;
-  }
-
-  .clear-area {
-    margin-top: 16px;
-    text-align: center;
-  }
-
-  .clear-btn {
-    color: #8a0000;
-    border-color: #d5b5b5;
-  }
-
-  .saved-message {
-    text-align: center;
-    color: #777;
-    font-size: 12px;
-    margin-top: 18px;
-  }
-
-  @media (max-width: 520px) {
-    .container {
-      padding: 14px 10px 30px;
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
     }
 
     h1 {
-      font-size: 24px;
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+    }
+
+    .subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .language-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--soft);
+      padding: 4px;
+      border-radius: 10px;
+      flex-shrink: 0;
+    }
+
+    .language-toggle button {
+      border: 0;
+      background: transparent;
+      padding: 7px 10px;
+      border-radius: 7px;
+      cursor: pointer;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    .language-toggle button.active {
+      background: white;
+      color: var(--text);
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+
+    .week-navigation {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .week-navigation button {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 9px;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .week-navigation button:hover {
+      background: var(--soft);
+    }
+
+    .week-label {
+      text-align: center;
+      font-weight: 700;
+      font-size: 15px;
     }
 
     .days {
-      gap: 3px;
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      margin-bottom: 20px;
     }
 
-    .day-btn {
-      font-size: 10px;
-      padding: 7px 2px;
+    .day-button {
+      position: relative;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 10px;
+      padding: 9px 4px;
+      cursor: pointer;
+      color: var(--text);
+      min-height: 56px;
+      transition: .15s ease;
     }
 
-    .session {
-      padding: 14px;
+    .day-button:hover {
+      transform: translateY(-1px);
+    }
+
+    .day-button.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .day-button.today {
+      border-color: var(--today-border);
+      box-shadow: inset 0 0 0 1px var(--today-border);
+    }
+
+    .day-button.active.today {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 2px var(--today-border);
+    }
+
+    .day-name {
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .day-date {
+      font-size: 12px;
+      margin-top: 2px;
+      opacity: .75;
+    }
+
+    .today-label {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--today-border);
+      color: #17365d;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 5px;
+      border-radius: 5px;
+      white-space: nowrap;
+    }
+
+    .session-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 18px;
     }
 
     .session-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+
+    .session-title {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.25;
+      letter-spacing: -.25px;
+    }
+
+    .session-type {
+      display: inline-block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .complete-control {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      white-space: nowrap;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    .complete-control input {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: #222;
+    }
+
+    .block {
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+      margin-top: 18px;
+    }
+
+    .block:first-child {
+      border-top: 0;
+      padding-top: 0;
+      margin-top: 0;
+    }
+
+    .block-header {
+      margin-bottom: 14px;
+    }
+
+    .block-title {
+      font-weight: 800;
+      font-size: 15px;
+    }
+
+    .sequence {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .exercise-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .exercise-wrapper {
+      display: flex;
       flex-direction: column;
     }
 
-    .complete-label {
-      align-self: flex-start;
+    .exercise {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      background: #fff;
     }
-  }
-</style>
+
+    .exercise-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .exercise-check {
+      padding-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .exercise-check input {
+      width: 19px;
+      height: 19px;
+      accent-color: #222;
+      cursor: pointer;
+    }
+
+    .exercise-main {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .exercise-name {
+      font-size: 15px;
+      font-weight: 750;
+      margin-bottom: 3px;
+    }
+
+    .exercise-prescription {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .exercise-actions {
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .video-button {
+      border: 1px solid var(--border);
+      background: var(--soft);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 6px 9px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .video-button:hover {
+      background: #e4e4df;
+    }
+
+    .video-container {
+      margin-top: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #111;
+    }
+
+    .video-container iframe {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+    }
+
+    .video-fallback {
+      padding: 10px;
+      background: #f1f1ed;
+      font-size: 12px;
+    }
+
+    .video-fallback a {
+      color: inherit;
+      font-weight: 700;
+    }
+
+    .exercise-notes {
+      width: 100%;
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 9px 10px;
+      resize: vertical;
+      min-height: 48px;
+      color: var(--text);
+      background: #fafaf8;
+      font-size: 13px;
+    }
+
+    .exercise-notes:focus,
+    .session-comments textarea:focus {
+      outline: 2px solid #c9c9c3;
+      border-color: #aaa;
+    }
+
+    .sequence-arrow {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 30px;
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .rest-timer {
+      margin-top: 12px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      background: #fafaf8;
+      border-radius: 12px;
+    }
+
+    .timer-title {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      margin-bottom: 8px;
+    }
+
+    .timer-display {
+      text-align: center;
+      font-size: 38px;
+      line-height: 1;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin: 8px 0 14px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .timer-presets {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .timer-preset,
+    .timer-control {
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+      border-radius: 8px;
+      padding: 7px 10px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .timer-preset.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .timer-controls {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .timer-control.primary {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .timer-status {
+      text-align: center;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      min-height: 18px;
+      font-weight: 650;
+    }
+
+    .timer-status.finished {
+      color: #286b35;
+    }
+
+    .session-comments {
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .session-comments label {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .session-comments textarea {
+      width: 100%;
+      min-height: 100px;
+      resize: vertical;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      background: #fafaf8;
+    }
+
+    .guide {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+
+    .guide h2 {
+      margin: 0 0 12px;
+      font-size: 17px;
+    }
+
+    .guide p {
+      margin: 9px 0;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .guide strong {
+      color: var(--text);
+    }
+
+    .clear-button {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--muted);
+      border-radius: 10px;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .clear-button:hover {
+      background: var(--soft);
+      color: var(--text);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 20px;
+    }
+
+    .rest-day {
+      text-align: center;
+      padding: 25px 10px;
+      color: var(--muted);
+    }
+
+    .rest-day-icon {
+      font-size: 30px;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 650px) {
+      .app {
+        padding: 16px 10px 40px;
+      }
+
+      header {
+        align-items: center;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .week-navigation {
+        flex-direction: column;
+      }
+
+      .week-navigation button {
+        width: 100%;
+      }
+
+      .week-label {
+        order: -1;
+      }
+
+      .days {
+        gap: 4px;
+      }
+
+      .day-button {
+        min-height: 52px;
+        padding: 7px 2px;
+      }
+
+      .day-name {
+        font-size: 11px;
+      }
+
+      .day-date {
+        font-size: 10px;
+      }
+
+      .session-card,
+      .guide {
+        padding: 16px;
+        border-radius: 13px;
+      }
+
+      .session-header {
+        flex-direction: column;
+      }
+
+      .session-title {
+        font-size: 20px;
+      }
+
+      .complete-control {
+        align-self: flex-start;
+      }
+
+      .today-label {
+        font-size: 8px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .language-toggle button {
+        padding: 6px 8px;
+      }
+
+      .days {
+        margin-left: -2px;
+        margin-right: -2px;
+      }
+
+      .day-button {
+        border-radius: 8px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
   <header>
-    <div class="top-row">
-      <h1 id="appTitle">Treino de força</h1>
-
-      <div class="language-switch">
-        <button
-          id="langPT"
-          class="lang-btn active"
-          onclick="setLanguage('pt')"
-        >
-          🇧🇷 PT
-        </button>
-
-        <button
-          id="langEN"
-          class="lang-btn"
-          onclick="setLanguage('en')"
-        >
-          🇺🇸 EN
-        </button>
-      </div>
+    <div>
+      <h1 id="app-title">Treino de força</h1>
+      <div class="subtitle" id="app-subtitle"></div>
     </div>
 
-    <div class="week-nav">
-      <button onclick="changeWeek(-1)" id="previousBtn">
-        ← Semana anterior
-      </button>
-
-      <div class="week-label" id="weekLabel"></div>
-
-      <button onclick="changeWeek(1)" id="nextBtn">
-        Próxima semana →
-      </button>
+    <div class="language-toggle">
+      <button id="pt-button" type="button">PT</button>
+      <button id="en-button" type="button">EN</button>
     </div>
-
-    <div class="days" id="days"></div>
   </header>
 
-  <main id="app"></main>
+  <div class="week-navigation">
+    <button id="previous-week" type="button"></button>
+    <div class="week-label" id="week-label"></div>
+    <button id="next-week" type="button"></button>
+  </div>
+
+  <div class="days" id="days"></div>
+
+  <main id="content"></main>
+
+  <section class="guide">
+    <h2 id="guide-title"></h2>
+    <div id="guide-content"></div>
+  </section>
+
+  <button class="clear-button" id="clear-week" type="button"></button>
+
+  <footer id="footer"></footer>
 
 </div>
 
 <script>
 
-/* =========================================================
-   LANGUAGE
-========================================================= */
-
-let language = localStorage.getItem('treino-language') || 'pt';
-
 const translations = {
 
   pt: {
     title: 'Treino de força',
-
+    subtitle: 'Programa semanal de força e escalada',
     previous: '← Semana anterior',
     next: 'Próxima semana →',
-
     sessionComplete: 'Sessão concluída',
-
     watchVideo: '▶ Ver vídeo de execução',
     closeVideo: '■ Fechar vídeo',
     openYoutube: '▶ Abrir no YouTube',
-
     observations: 'Observações',
     sessionComments: 'Comentários da sessão',
-
     notesPlaceholder:
       'Registre cargas, repetições, dificuldade, dor, ajustes ou qualquer observação...',
-
     commentsPlaceholder:
       'Como foi a sessão? Energia, técnica, recuperação, dificuldades...',
-
     clear: 'Limpar registros desta semana',
-
-    saved:
-      'Os registros ficam salvos neste dispositivo, no navegador.',
-
-    guideTitle:
-      'Como fazer Bi-set e Tri-set',
-
+    saved: 'Os registros ficam salvos neste dispositivo, no navegador.',
+    guideTitle: 'Como fazer Bi-set e Tri-set',
     biSet:
       '<strong>Bi-set:</strong> faça A1 → A2 em sequência, com pouca ou nenhuma pausa. Depois dos dois exercícios, descanse o tempo indicado e repita a rodada.',
-
     triSet:
       '<strong>Tri-set:</strong> faça A1 → A2 → A3 em sequência, com pouca ou nenhuma pausa. Depois dos três exercícios, descanse o tempo indicado e repita a rodada.',
-
     important:
       '<strong>Importante:</strong> mantenha a técnica e o esforço planejado. Se a execução começar a piorar, aumente o descanso. A ideia é ganhar eficiência, não fazer os exercícios com pressa.',
-
-    days: [
-      'Seg',
-      'Ter',
-      'Qua',
-      'Qui',
-      'Sex',
-      'Sáb',
-      'Dom'
-    ]
+    boulder: 'Boulder',
+    recovery: 'Recuperação',
+    strength: 'Força',
+    today: 'Hoje',
+    rest: 'Descanso',
+    restTimer: 'Descanso',
+    start: '▶ Iniciar',
+    pause: '⏸ Pausar',
+    reset: '↻ Reiniciar',
+    finished: '✓ Descanso concluído',
+    repeat: '↻ Repetir rodada',
+    days: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom']
   },
 
   en: {
     title: 'Strength Training',
-
+    subtitle: 'Weekly strength and climbing program',
     previous: '← Previous week',
     next: 'Next week →',
-
     sessionComplete: 'Session completed',
-
     watchVideo: '▶ Watch execution video',
     closeVideo: '■ Close video',
     openYoutube: '▶ Open on YouTube',
-
     observations: 'Notes',
     sessionComments: 'Session comments',
-
     notesPlaceholder:
       'Record loads, repetitions, difficulty, pain, adjustments, or anything else you noticed...',
-
     commentsPlaceholder:
       'How was the session? Energy, technique, recovery, difficulties...',
-
     clear: 'Clear this week’s records',
-
-    saved:
-      'Your records are saved on this device, in this browser.',
-
-    guideTitle:
-      'How to do Bi-sets and Tri-sets',
-
+    saved: 'Your records are saved on this device, in this browser.',
+    guideTitle: 'How to do Bi-sets and Tri-sets',
     biSet:
       '<strong>Bi-set:</strong> perform A1 → A2 in sequence, with little or no rest between exercises. After both exercises, rest for the indicated time and repeat the round.',
-
     triSet:
       '<strong>Tri-set:</strong> perform A1 → A2 → A3 in sequence, with little or no rest between exercises. After all three exercises, rest for the indicated time and repeat the round.',
-
     important:
       '<strong>Important:</strong> maintain good technique and the planned effort. If your execution starts to deteriorate, take more rest. The goal is efficiency, not rushing.',
-
-    days: [
-      'Mon',
-      'Tue',
-      'Wed',
-      'Thu',
-      'Fri',
-      'Sat',
-      'Sun'
-    ]
+    boulder: 'Bouldering',
+    recovery: 'Recovery',
+    strength: 'Strength',
+    today: 'Today',
+    rest: 'Rest',
+    restTimer: 'Rest',
+    start: '▶ Start',
+    pause: '⏸ Pause',
+    reset: '↻ Reset',
+    finished: '✓ Rest complete',
+    repeat: '↻ Repeat round',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
   }
 };
 
-function t(key) {
-  return translations[language][key] || key;
-}
-
-
-/* =========================================================
-   WORKOUT DATA
-========================================================= */
 
 const sessions = [
 
@@ -513,11 +774,12 @@ const sessions = [
 
       {
         type: 'Bi-set',
+
         exercises: [
 
           {
             name: {
-              pt: 'RDL unilateral com apoio',
+              pt: 'Levantamento terra unilateral com apoio',
               en: 'Supported single-leg RDL'
             },
 
@@ -542,16 +804,18 @@ const sessions = [
 
             youtubeId: '8FD89xF4l1A'
           }
+
         ]
       },
 
       {
         type: 'Tri-set',
+
         exercises: [
 
           {
             name: {
-              pt: 'Pistol squat com apoio',
+              pt: 'Agachamento pistola com apoio',
               en: 'Supported pistol squat'
             },
 
@@ -565,7 +829,7 @@ const sessions = [
 
           {
             name: {
-              pt: 'Abdução com mini band',
+              pt: 'Abdução de quadril com miniband',
               en: 'Mini-band hip abduction'
             },
 
@@ -590,8 +854,10 @@ const sessions = [
 
             youtubeId: 'PJGXyldAWk4'
           }
+
         ]
       }
+
     ]
   },
 
@@ -614,6 +880,7 @@ const sessions = [
 
       {
         type: 'Boulder',
+
         exercises: [
 
           {
@@ -629,8 +896,10 @@ const sessions = [
 
             youtubeId: null
           }
+
         ]
       }
+
     ]
   },
 
@@ -653,11 +922,12 @@ const sessions = [
 
       {
         type: 'Bi-set',
+
         exercises: [
 
           {
             name: {
-              pt: 'High step assistido',
+              pt: 'Subida em degrau alto assistida',
               en: 'Assisted high step-up'
             },
 
@@ -682,16 +952,19 @@ const sessions = [
 
             youtubeId: 'bsOYjx22OSc'
           }
+
         ]
       },
 
+
       {
         type: 'Tri-set',
+
         exercises: [
 
           {
             name: {
-              pt: 'Glute bridge com pausa de 2 s',
+              pt: 'Ponte de glúteos com pausa de 2 s',
               en: 'Glute bridge with 2-sec pause'
             },
 
@@ -705,7 +978,7 @@ const sessions = [
 
           {
             name: {
-              pt: 'Abdução com mini band',
+              pt: 'Abdução de quadril com miniband',
               en: 'Mini-band hip abduction'
             },
 
@@ -730,8 +1003,10 @@ const sessions = [
 
             youtubeId: 'swQXM6CykFg'
           }
+
         ]
       }
+
     ]
   },
 
@@ -754,6 +1029,7 @@ const sessions = [
 
       {
         type: 'Boulder',
+
         exercises: [
 
           {
@@ -769,8 +1045,10 @@ const sessions = [
 
             youtubeId: null
           }
+
         ]
       }
+
     ]
   },
 
@@ -793,11 +1071,12 @@ const sessions = [
 
       {
         type: 'Bi-set',
+
         exercises: [
 
           {
             name: {
-              pt: 'Hamstring curl ou heel walkout',
+              pt: 'Flexão de joelhos para posteriores ou caminhada de calcanhares',
               en: 'Hamstring curl or heel walkout'
             },
 
@@ -822,16 +1101,19 @@ const sessions = [
 
             youtubeId: '8FD89xF4l1A'
           }
+
         ]
       },
 
+
       {
         type: 'Tri-set',
+
         exercises: [
 
           {
             name: {
-              pt: 'Hip thrust ou glute bridge',
+              pt: 'Extensão de quadril ou ponte de glúteos',
               en: 'Hip thrust or glute bridge'
             },
 
@@ -845,7 +1127,7 @@ const sessions = [
 
           {
             name: {
-              pt: 'Sissy squat assistido',
+              pt: 'Agachamento sissy assistido',
               en: 'Assisted sissy squat'
             },
 
@@ -870,8 +1152,10 @@ const sessions = [
 
             youtubeId: 'PJGXyldAWk4'
           }
+
         ]
       }
+
     ]
   },
 
@@ -894,6 +1178,7 @@ const sessions = [
 
       {
         type: 'Bi-set',
+
         exercises: [
 
           {
@@ -923,16 +1208,19 @@ const sessions = [
 
             youtubeId: 'swQXM6CykFg'
           }
+
         ]
       },
 
+
       {
         type: 'Tri-set',
+
         exercises: [
 
           {
             name: {
-              pt: 'Barra excêntrica',
+              pt: 'Barra fixa excêntrica',
               en: 'Eccentric pull-up'
             },
 
@@ -946,7 +1234,7 @@ const sessions = [
 
           {
             name: {
-              pt: 'Glute bridge unilateral',
+              pt: 'Ponte de glúteos unilateral',
               en: 'Single-leg glute bridge'
             },
 
@@ -971,8 +1259,10 @@ const sessions = [
 
             youtubeId: 'otn4KxEknKw'
           }
+
         ]
       }
+
     ]
   },
 
@@ -997,18 +1287,23 @@ const sessions = [
 ];
 
 
-/* =========================================================
-   DATE / WEEK
-========================================================= */
+let language =
+  localStorage.getItem('treino-language') || 'pt';
 
 let week = monday(new Date());
 
 let activeIndex =
-  Math.min((new Date().getDay() + 6) % 7, 6);
+  Math.min(
+    (new Date().getDay() + 6) % 7,
+    6
+  );
 
 if (activeIndex === 6) {
   activeIndex = 0;
 }
+
+
+const timerStates = {};
 
 
 function monday(date) {
@@ -1031,29 +1326,33 @@ function monday(date) {
 
 
 function key(date) {
-  return date.toISOString().slice(0, 10);
+
+  return date
+    .toISOString()
+    .slice(0, 10);
+
 }
 
 
 function dateLabel(date) {
 
   return date.toLocaleDateString(
-    language === 'pt' ? 'pt-BR' : 'en-US',
+    language === 'pt'
+      ? 'pt-BR'
+      : 'en-US',
     {
       day: '2-digit',
       month: '2-digit'
     }
   );
+
 }
 
-
-/* =========================================================
-   LOCAL STORAGE
-========================================================= */
 
 function storageKey(sessionId) {
 
   return `treino-${key(week)}-${sessionId}`;
+
 }
 
 
@@ -1062,13 +1361,17 @@ function load(sessionId) {
   try {
 
     return JSON.parse(
-      localStorage.getItem(storageKey(sessionId)) || '{}'
+      localStorage.getItem(
+        storageKey(sessionId)
+      ) || '{}'
     );
 
   } catch {
 
     return {};
+
   }
+
 }
 
 
@@ -1078,623 +1381,1553 @@ function save(sessionId, data) {
     storageKey(sessionId),
     JSON.stringify(data)
   );
+
 }
 
 
-/* =========================================================
-   RENDER DAYS
-========================================================= */
+function getSessionData(sessionId) {
+
+  const data = load(sessionId);
+
+  if (!data.exercises) {
+    data.exercises = {};
+  }
+
+  if (!data.comments) {
+    data.comments = '';
+  }
+
+  if (typeof data.complete !== 'boolean') {
+    data.complete = false;
+  }
+
+  return data;
+
+}
+
+
+function escapeHtml(value) {
+
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+
+}
+
+
+function stopAllTimers() {
+
+  Object.keys(timerStates).forEach(id => {
+
+    if (timerStates[id]?.interval) {
+
+      clearInterval(
+        timerStates[id].interval
+      );
+
+    }
+
+  });
+
+}
+
+
+function formatTime(seconds) {
+
+  const minutes =
+    Math.floor(seconds / 60);
+
+  const secs =
+    seconds % 60;
+
+  return (
+    String(minutes).padStart(2, '0') +
+    ':' +
+    String(secs).padStart(2, '0')
+  );
+
+}
+
+
+function playBeep() {
+
+  try {
+
+    const AudioContext =
+      window.AudioContext ||
+      window.webkitAudioContext;
+
+    if (!AudioContext) {
+      return;
+    }
+
+    const context =
+      new AudioContext();
+
+    const oscillator =
+      context.createOscillator();
+
+    const gain =
+      context.createGain();
+
+    oscillator.connect(gain);
+    gain.connect(context.destination);
+
+    oscillator.frequency.value = 880;
+    oscillator.type = 'sine';
+
+    gain.gain.setValueAtTime(
+      0.001,
+      context.currentTime
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.2,
+      context.currentTime + 0.02
+    );
+
+    gain.gain.exponentialRampToValueAtTime(
+      0.001,
+      context.currentTime + 0.4
+    );
+
+    oscillator.start();
+
+    oscillator.stop(
+      context.currentTime + 0.4
+    );
+
+  } catch {
+
+    // Som opcional; não interrompe o aplicativo.
+
+  }
+
+}
+
+
+function startTimer(timerId) {
+
+  const state =
+    timerStates[timerId];
+
+  if (!state) {
+    return;
+  }
+
+  if (state.remaining <= 0) {
+
+    state.remaining =
+      state.duration;
+
+  }
+
+  state.running = true;
+
+  state.finished = false;
+
+  updateTimerUI(timerId);
+
+  if (state.interval) {
+
+    clearInterval(
+      state.interval
+    );
+
+  }
+
+  state.interval =
+    setInterval(() => {
+
+      state.remaining--;
+
+      if (state.remaining <= 0) {
+
+        state.remaining = 0;
+
+        state.running = false;
+
+        state.finished = true;
+
+        clearInterval(
+          state.interval
+        );
+
+        state.interval = null;
+
+        playBeep();
+
+      }
+
+      updateTimerUI(timerId);
+
+    }, 1000);
+
+}
+
+
+function pauseTimer(timerId) {
+
+  const state =
+    timerStates[timerId];
+
+  if (!state) {
+    return;
+  }
+
+  state.running = false;
+
+  if (state.interval) {
+
+    clearInterval(
+      state.interval
+    );
+
+    state.interval = null;
+
+  }
+
+  updateTimerUI(timerId);
+
+}
+
+
+function resetTimer(timerId) {
+
+  const state =
+    timerStates[timerId];
+
+  if (!state) {
+    return;
+  }
+
+  state.running = false;
+
+  state.finished = false;
+
+  state.remaining =
+    state.duration;
+
+  if (state.interval) {
+
+    clearInterval(
+      state.interval
+    );
+
+    state.interval = null;
+
+  }
+
+  updateTimerUI(timerId);
+
+}
+
+
+function setTimerDuration(timerId, seconds) {
+
+  const state =
+    timerStates[timerId];
+
+  if (!state) {
+    return;
+  }
+
+  state.duration = seconds;
+
+  state.remaining = seconds;
+
+  state.running = false;
+
+  state.finished = false;
+
+  if (state.interval) {
+
+    clearInterval(
+      state.interval
+    );
+
+    state.interval = null;
+
+  }
+
+  updateTimerUI(timerId);
+
+}
+
+
+function updateTimerUI(timerId) {
+
+  const state =
+    timerStates[timerId];
+
+  const display =
+    document.querySelector(
+      `[data-timer-display="${timerId}"]`
+    );
+
+  const status =
+    document.querySelector(
+      `[data-timer-status="${timerId}"]`
+    );
+
+  const startButton =
+    document.querySelector(
+      `[data-timer-start="${timerId}"]`
+    );
+
+  if (!state) {
+    return;
+  }
+
+  if (display) {
+
+    display.textContent =
+      formatTime(state.remaining);
+
+  }
+
+  if (status) {
+
+    if (state.finished) {
+
+      status.textContent =
+        translations[language].finished;
+
+      status.classList.add('finished');
+
+    } else if (state.running) {
+
+      status.textContent =
+        translations[language].restTimer;
+
+      status.classList.remove('finished');
+
+    } else {
+
+      status.textContent = '';
+
+      status.classList.remove('finished');
+
+    }
+
+  }
+
+  if (startButton) {
+
+    startButton.textContent =
+      state.running
+        ? translations[language].pause
+        : translations[language].start;
+
+  }
+
+  document
+    .querySelectorAll(
+      `[data-timer-preset-group="${timerId}"] .timer-preset`
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        'active',
+        Number(button.dataset.seconds) ===
+        state.duration
+      );
+
+    });
+
+}
+
+
+function createTimer(timerId) {
+
+  timerStates[timerId] = {
+
+    duration: 90,
+    remaining: 90,
+    running: false,
+    finished: false,
+    interval: null
+
+  };
+
+  return `
+
+    <div class="rest-timer">
+
+      <div class="timer-title">
+        ${escapeHtml(translations[language].restTimer)}
+      </div>
+
+      <div
+        class="timer-display"
+        data-timer-display="${timerId}"
+      >
+        01:30
+      </div>
+
+      <div
+        class="timer-presets"
+        data-timer-preset-group="${timerId}"
+      >
+
+        <button
+          class="timer-preset"
+          type="button"
+          data-timer="${timerId}"
+          data-seconds="30"
+        >
+          30 s
+        </button>
+
+        <button
+          class="timer-preset"
+          type="button"
+          data-timer="${timerId}"
+          data-seconds="60"
+        >
+          60 s
+        </button>
+
+        <button
+          class="timer-preset active"
+          type="button"
+          data-timer="${timerId}"
+          data-seconds="90"
+        >
+          90 s
+        </button>
+
+        <button
+          class="timer-preset"
+          type="button"
+          data-timer="${timerId}"
+          data-seconds="120"
+        >
+          120 s
+        </button>
+
+      </div>
+
+      <div class="timer-controls">
+
+        <button
+          class="timer-control primary"
+          type="button"
+          data-timer-start="${timerId}"
+          data-timer="${timerId}"
+        >
+          ${escapeHtml(translations[language].start)}
+        </button>
+
+        <button
+          class="timer-control"
+          type="button"
+          data-timer-reset="${timerId}"
+          data-timer="${timerId}"
+        >
+          ${escapeHtml(translations[language].reset)}
+        </button>
+
+      </div>
+
+      <div
+        class="timer-status"
+        data-timer-status="${timerId}"
+      ></div>
+
+    </div>
+
+  `;
+
+}
+
+
+function renderExercise(
+  session,
+  block,
+  exercise,
+  exerciseIndex,
+  blockIndex
+) {
+
+  const data =
+    getSessionData(session.id);
+
+  const exerciseKey =
+    `${blockIndex}-${exerciseIndex}`;
+
+  const exerciseData =
+    data.exercises[exerciseKey] || {};
+
+  const checked =
+    exerciseData.checked
+      ? 'checked'
+      : '';
+
+  const note =
+    exerciseData.note || '';
+
+  const isBoulder =
+    block.type === 'Boulder';
+
+  const label =
+    block.type === 'Bi-set'
+      ? `A${exerciseIndex + 1}`
+      : block.type === 'Tri-set'
+        ? `A${exerciseIndex + 1}`
+        : '';
+
+  const videoId =
+    exercise.youtubeId;
+
+  return `
+
+    <div class="exercise">
+
+      <div class="exercise-row">
+
+        <div class="exercise-check">
+
+          <input
+            type="checkbox"
+            data-exercise-check
+            data-session="${session.id}"
+            data-exercise="${exerciseKey}"
+            ${checked}
+            aria-label="${escapeHtml(
+              exercise.name[language]
+            )}"
+          >
+
+        </div>
+
+        <div class="exercise-main">
+
+          <div class="exercise-name">
+
+            ${
+              label
+                ? `<span style="color:#777;margin-right:5px">${label}</span>`
+                : ''
+            }
+
+            ${escapeHtml(
+              exercise.name[language]
+            )}
+
+          </div>
+
+          <div class="exercise-prescription">
+
+            ${escapeHtml(
+              exercise.prescription[language]
+            )}
+
+          </div>
+
+          <textarea
+            class="exercise-notes"
+            data-exercise-note
+            data-session="${session.id}"
+            data-exercise="${exerciseKey}"
+            placeholder="${escapeHtml(
+              translations[language].notesPlaceholder
+            )}"
+            rows="2"
+          >${escapeHtml(note)}</textarea>
+
+          ${
+            videoId
+              ? `
+
+                <div class="exercise-actions">
+
+                  <button
+                    class="video-button"
+                    type="button"
+                    data-video-button
+                    data-video-id="${videoId}"
+                    data-video-target="${session.id}-${exerciseKey}"
+                  >
+                    ${escapeHtml(
+                      translations[language].watchVideo
+                    )}
+                  </button>
+
+                </div>
+
+                <div
+                  id="video-${session.id}-${exerciseKey}"
+                  class="video-container"
+                  hidden
+                ></div>
+
+              `
+              : ''
+          }
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function renderBlock(
+  session,
+  block,
+  blockIndex
+) {
+
+  if (!block.exercises.length) {
+    return '';
+  }
+
+  const type =
+    block.type;
+
+  const sequence =
+    type === 'Bi-set'
+      ? 'A1 → A2 → Descanso → Repetir'
+      : type === 'Tri-set'
+        ? 'A1 → A2 → A3 → Descanso → Repetir'
+        : '';
+
+  let exercisesHtml = '';
+
+  block.exercises.forEach(
+    (exercise, index) => {
+
+      exercisesHtml += `
+
+        <div class="exercise-wrapper">
+
+          ${renderExercise(
+            session,
+            block,
+            exercise,
+            index,
+            blockIndex
+          )}
+
+      `;
+
+      if (
+        index <
+        block.exercises.length - 1
+      ) {
+
+        exercisesHtml += `
+
+          <div class="sequence-arrow">
+            ↓
+          </div>
+
+        `;
+
+      }
+
+      exercisesHtml += `</div>`;
+
+    }
+  );
+
+
+  let timerHtml = '';
+
+  if (
+    type === 'Bi-set' ||
+    type === 'Tri-set'
+  ) {
+
+    const timerId =
+      `${session.id}-timer-${blockIndex}`;
+
+    timerHtml =
+      createTimer(timerId);
+
+  }
+
+
+  return `
+
+    <section class="block">
+
+      <div class="block-header">
+
+        <div class="block-title">
+
+          ${escapeHtml(type)}
+
+        </div>
+
+        ${
+          sequence
+            ? `
+              <div class="sequence">
+                ${escapeHtml(sequence)}
+              </div>
+            `
+            : ''
+        }
+
+      </div>
+
+      <div class="exercise-list">
+
+        ${exercisesHtml}
+
+      </div>
+
+      ${timerHtml}
+
+    </section>
+
+  `;
+
+}
+
+
+function renderSession(session) {
+
+  const data =
+    getSessionData(session.id);
+
+  const title =
+    session.title[language];
+
+  const type =
+    session.type[language];
+
+  if (session.id === 'REST') {
+
+    return `
+
+      <section class="session-card">
+
+        <div class="session-header">
+
+          <div>
+
+            <h2 class="session-title">
+              ${escapeHtml(title)}
+            </h2>
+
+            <div class="session-type">
+              ${escapeHtml(type)}
+            </div>
+
+          </div>
+
+          <label class="complete-control">
+
+            <input
+              type="checkbox"
+              data-session-complete
+              data-session="${session.id}"
+              ${data.complete ? 'checked' : ''}
+            >
+
+            ${escapeHtml(
+              translations[language].sessionComplete
+            )}
+
+          </label>
+
+        </div>
+
+        <div class="rest-day">
+
+          <div class="rest-day-icon">
+            ◌
+          </div>
+
+          <div>
+            ${escapeHtml(
+              translations[language].rest
+            )}
+          </div>
+
+        </div>
+
+      </section>
+
+    `;
+
+  }
+
+
+  let blocksHtml = '';
+
+  session.blocks.forEach(
+    (block, index) => {
+
+      blocksHtml +=
+        renderBlock(
+          session,
+          block,
+          index
+        );
+
+    }
+  );
+
+
+  return `
+
+    <section class="session-card">
+
+      <div class="session-header">
+
+        <div>
+
+          <h2 class="session-title">
+            ${escapeHtml(title)}
+          </h2>
+
+          <div class="session-type">
+            ${escapeHtml(type)}
+          </div>
+
+        </div>
+
+        <label class="complete-control">
+
+          <input
+            type="checkbox"
+            data-session-complete
+            data-session="${session.id}"
+            ${data.complete ? 'checked' : ''}
+          >
+
+          ${escapeHtml(
+            translations[language].sessionComplete
+          )}
+
+        </label>
+
+      </div>
+
+      ${blocksHtml}
+
+      <div class="session-comments">
+
+        <label>
+          ${escapeHtml(
+            translations[language].sessionComments
+          )}
+        </label>
+
+        <textarea
+          data-session-comments
+          data-session="${session.id}"
+          placeholder="${escapeHtml(
+            translations[language].commentsPlaceholder
+          )}"
+        >${escapeHtml(data.comments)}</textarea>
+
+      </div>
+
+    </section>
+
+  `;
+
+}
+
 
 function renderDays() {
 
-  const container =
+  const daysElement =
     document.getElementById('days');
 
-  container.innerHTML = '';
+  let html = '';
 
-  for (let i = 0; i < 7; i++) {
+  const today =
+    new Date();
 
-    const date = new Date(week);
+  const currentWeek =
+    monday(today);
 
-    date.setDate(
-      week.getDate() + i
-    );
+  sessions.forEach(
+    (session, index) => {
 
-    const button =
-      document.createElement('button');
+      const date =
+        new Date(week);
 
-    button.className =
-      'day-btn' +
-      (i === activeIndex ? ' active' : '');
+      date.setDate(
+        week.getDate() + index
+      );
 
-    button.innerHTML = `
-      <span class="day-name">
-        ${t('days')[i]}
-      </span>
+      const isToday =
+        key(date) === key(today);
 
-      <span class="day-date">
-        ${dateLabel(date)}
-      </span>
-    `;
+      const isCurrentWeek =
+        key(week) === key(currentWeek);
 
-    button.onclick = () => {
+      const isActive =
+        index === activeIndex;
 
-      activeIndex = i;
+      const classes = [
+        'day-button',
+        isActive ? 'active' : '',
+        isToday && isCurrentWeek
+          ? 'today'
+          : ''
+      ]
+        .filter(Boolean)
+        .join(' ');
 
-      render();
-    };
+      html += `
 
-    container.appendChild(button);
-  }
+        <button
+          class="${classes}"
+          type="button"
+          data-day-index="${index}"
+        >
+
+          ${
+            isToday && isCurrentWeek
+              ? `
+                <span class="today-label">
+                  ${escapeHtml(
+                    translations[language].today
+                  )}
+                </span>
+              `
+              : ''
+          }
+
+          <div class="day-name">
+            ${escapeHtml(
+              translations[language].days[index]
+            )}
+          </div>
+
+          <div class="day-date">
+            ${dateLabel(date)}
+          </div>
+
+        </button>
+
+      `;
+
+    }
+  );
+
+  daysElement.innerHTML =
+    html;
+
 }
 
 
-/* =========================================================
-   RENDER SESSION
-========================================================= */
+function renderWeekLabel() {
+
+  const start =
+    new Date(week);
+
+  const end =
+    new Date(week);
+
+  end.setDate(
+    end.getDate() + 6
+  );
+
+  const locale =
+    language === 'pt'
+      ? 'pt-BR'
+      : 'en-US';
+
+  const startText =
+    start.toLocaleDateString(
+      locale,
+      {
+        day: '2-digit',
+        month: 'short'
+      }
+    );
+
+  const endText =
+    end.toLocaleDateString(
+      locale,
+      {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      }
+    );
+
+  document.getElementById(
+    'week-label'
+  ).textContent =
+    `${startText} — ${endText}`;
+
+}
+
+
+function renderGuide() {
+
+  const t =
+    translations[language];
+
+  document.getElementById(
+    'guide-title'
+  ).textContent =
+    t.guideTitle;
+
+  document.getElementById(
+    'guide-content'
+  ).innerHTML = `
+
+    <p>${t.biSet}</p>
+
+    <p>${t.triSet}</p>
+
+    <p>${t.important}</p>
+
+  `;
+
+}
+
 
 function render() {
+
+  stopAllTimers();
+
+  Object.keys(timerStates)
+    .forEach(key => {
+      delete timerStates[key];
+    });
+
+  const t =
+    translations[language];
 
   document.documentElement.lang =
     language === 'pt'
       ? 'pt-BR'
       : 'en';
 
-  document.getElementById('appTitle')
-    .textContent = t('title');
+  document.getElementById(
+    'app-title'
+  ).textContent =
+    t.title;
 
-  document.getElementById('previousBtn')
-    .textContent = t('previous');
+  document.getElementById(
+    'app-subtitle'
+  ).textContent =
+    t.subtitle;
 
-  document.getElementById('nextBtn')
-    .textContent = t('next');
+  document.getElementById(
+    'previous-week'
+  ).textContent =
+    t.previous;
 
-  document.getElementById('weekLabel')
-    .textContent =
-      `${t('days')[0]} ${dateLabel(week)} — ` +
-      `${t('days')[6]} ${dateLabel(
-        new Date(
-          week.getFullYear(),
-          week.getMonth(),
-          week.getDate() + 6
-        )
-      )}`;
+  document.getElementById(
+    'next-week'
+  ).textContent =
+    t.next;
 
-  document.getElementById('langPT')
+  document.getElementById(
+    'clear-week'
+  ).textContent =
+    t.clear;
+
+  document.getElementById(
+    'footer'
+  ).textContent =
+    t.saved;
+
+  document
+    .getElementById('pt-button')
     .classList.toggle(
       'active',
       language === 'pt'
     );
 
-  document.getElementById('langEN')
+  document
+    .getElementById('en-button')
     .classList.toggle(
       'active',
       language === 'en'
     );
 
+  renderWeekLabel();
+
   renderDays();
 
   const session =
-    sessions.find(
-      s => s.day === activeIndex
-    );
+    sessions[activeIndex];
 
-  const app =
-    document.getElementById('app');
+  document.getElementById(
+    'content'
+  ).innerHTML =
+    renderSession(session);
 
-  if (!session) {
+  renderGuide();
 
-    app.innerHTML = '';
+  attachEvents();
 
-    return;
-  }
-
-  const data =
-    load(session.id);
-
-  let html = `
-
-    <section class="session">
-
-      <div class="session-header">
-
-        <div>
-
-          <div class="session-title">
-            ${session.title[language]}
-          </div>
-
-          <div class="session-type">
-            ${session.type[language]}
-          </div>
-
-        </div>
-
-        <label class="complete-label">
-
-          <input
-            type="checkbox"
-            id="sessionComplete"
-            ${data.complete ? 'checked' : ''}
-          >
-
-          ${t('sessionComplete')}
-
-        </label>
-
-      </div>
-  `;
+}
 
 
-  session.blocks.forEach(
-    (block, blockIndex) => {
+function attachEvents() {
 
-      if (block.type === 'Boulder') {
+  document
+    .querySelectorAll('[data-day-index]')
+    .forEach(button => {
 
-        block.exercises.forEach(
-          (exercise, exerciseIndex) => {
+      button.addEventListener(
+        'click',
+        () => {
 
-            html += renderExercise(
-              session,
-              block,
-              blockIndex,
-              exercise,
-              exerciseIndex,
-              data
+          activeIndex =
+            Number(
+              button.dataset.dayIndex
             );
-          }
-        );
 
-        return;
-      }
+          render();
 
+        }
+      );
 
-      html += `
-
-        <div class="block">
-
-          <div class="block-title">
-            ${block.type}
-          </div>
-
-      `;
+    });
 
 
-      block.exercises.forEach(
-        (exercise, exerciseIndex) => {
+  document
+    .querySelectorAll('[data-session-complete]')
+    .forEach(input => {
 
-          html += renderExercise(
-            session,
-            block,
-            blockIndex,
-            exercise,
-            exerciseIndex,
+      input.addEventListener(
+        'change',
+        () => {
+
+          const sessionId =
+            input.dataset.session;
+
+          const data =
+            getSessionData(sessionId);
+
+          data.complete =
+            input.checked;
+
+          save(
+            sessionId,
             data
           );
 
         }
       );
 
+    });
 
-      html += `
-        </div>
-      `;
-    }
-  );
-
-
-  html += `
-
-      <div class="block">
-
-        <div class="block-title">
-          ${t('observations')}
-        </div>
-
-        <textarea
-          id="sessionNotes"
-          placeholder="${t('notesPlaceholder')}"
-        >${escapeHtml(data.sessionNotes || '')}</textarea>
-
-      </div>
-
-      <div class="block">
-
-        <div class="block-title">
-          ${t('sessionComments')}
-        </div>
-
-        <textarea
-          id="sessionComments"
-          placeholder="${t('commentsPlaceholder')}"
-        >${escapeHtml(data.sessionComments || '')}</textarea>
-
-      </div>
-
-
-      <div class="set-guide">
-
-        <strong>
-          ${t('guideTitle')}
-        </strong>
-
-        <p>
-          ${t('biSet')}
-        </p>
-
-        <p>
-          ${t('triSet')}
-        </p>
-
-        <p>
-          ${t('important')}
-        </p>
-
-      </div>
-
-    </section>
-
-
-    <div class="clear-area">
-
-      <button
-        class="clear-btn"
-        onclick="clearWeek()"
-      >
-        ${t('clear')}
-      </button>
-
-    </div>
-
-    <div class="saved-message">
-      ${t('saved')}
-    </div>
-  `;
-
-
-  app.innerHTML = html;
-
-
-  /* SESSION COMPLETE */
-
-  const complete =
-    document.getElementById(
-      'sessionComplete'
-    );
-
-  complete.addEventListener(
-    'change',
-    () => {
-
-      const current =
-        load(session.id);
-
-      current.complete =
-        complete.checked;
-
-      save(
-        session.id,
-        current
-      );
-    }
-  );
-
-
-  /* NOTES */
-
-  const notes =
-    document.getElementById(
-      'sessionNotes'
-    );
-
-  notes.addEventListener(
-    'input',
-    () => {
-
-      const current =
-        load(session.id);
-
-      current.sessionNotes =
-        notes.value;
-
-      save(
-        session.id,
-        current
-      );
-    }
-  );
-
-
-  /* COMMENTS */
-
-  const comments =
-    document.getElementById(
-      'sessionComments'
-    );
-
-  comments.addEventListener(
-    'input',
-    () => {
-
-      const current =
-        load(session.id);
-
-      current.sessionComments =
-        comments.value;
-
-      save(
-        session.id,
-        current
-      );
-    }
-  );
-
-
-  /* EXERCISE CHECKBOXES */
 
   document
-    .querySelectorAll(
-      '.exercise-check'
-    )
-    .forEach(
-      checkbox => {
+    .querySelectorAll('[data-exercise-check]')
+    .forEach(input => {
 
-        checkbox.addEventListener(
-          'change',
-          () => {
+      input.addEventListener(
+        'change',
+        () => {
 
-            const current =
-              load(session.id);
+          const sessionId =
+            input.dataset.session;
 
-            const exerciseKey =
-              checkbox.dataset.exercise;
+          const exerciseKey =
+            input.dataset.exercise;
 
-            if (!current.exercises) {
-              current.exercises = {};
-            }
+          const data =
+            getSessionData(sessionId);
 
-            current.exercises[
-              exerciseKey
-            ] =
-              checkbox.checked;
+          if (!data.exercises[exerciseKey]) {
 
-            save(
-              session.id,
-              current
+            data.exercises[exerciseKey] = {};
+
+          }
+
+          data.exercises[
+            exerciseKey
+          ].checked =
+            input.checked;
+
+          save(
+            sessionId,
+            data
+          );
+
+        }
+      );
+
+    });
+
+
+  document
+    .querySelectorAll('[data-exercise-note]')
+    .forEach(textarea => {
+
+      textarea.addEventListener(
+        'input',
+        () => {
+
+          const sessionId =
+            textarea.dataset.session;
+
+          const exerciseKey =
+            textarea.dataset.exercise;
+
+          const data =
+            getSessionData(sessionId);
+
+          if (!data.exercises[exerciseKey]) {
+
+            data.exercises[exerciseKey] = {};
+
+          }
+
+          data.exercises[
+            exerciseKey
+          ].note =
+            textarea.value;
+
+          save(
+            sessionId,
+            data
+          );
+
+        }
+      );
+
+    });
+
+
+  document
+    .querySelectorAll('[data-session-comments]')
+    .forEach(textarea => {
+
+      textarea.addEventListener(
+        'input',
+        () => {
+
+          const sessionId =
+            textarea.dataset.session;
+
+          const data =
+            getSessionData(sessionId);
+
+          data.comments =
+            textarea.value;
+
+          save(
+            sessionId,
+            data
+          );
+
+        }
+      );
+
+    });
+
+
+  document
+    .querySelectorAll('[data-video-button]')
+    .forEach(button => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+          const videoId =
+            button.dataset.videoId;
+
+          const targetId =
+            button.dataset.videoTarget;
+
+          const container =
+            document.getElementById(
+              `video-${targetId}`
             );
+
+          if (!container) {
+            return;
           }
-        );
-      }
-    );
 
+          if (container.hidden) {
 
-  /* VIDEO BUTTONS */
+            container.innerHTML = `
+
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}"
+                title="${escapeHtml(
+                  translations[language].watchVideo
+                )}"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+
+              <div class="video-fallback">
+
+                <a
+                  href="https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  ${escapeHtml(
+                    translations[language].openYoutube
+                  )}
+                </a>
+
+              </div>
+
+            `;
+
+            container.hidden =
+              false;
+
+            button.textContent =
+              translations[language].closeVideo;
+
+          } else {
+
+            container.hidden =
+              true;
+
+            container.innerHTML =
+              '';
+
+            button.textContent =
+              translations[language].watchVideo;
+
+          }
+
+        }
+      );
+
+    });
+
 
   document
-    .querySelectorAll(
-      '.video-button'
-    )
-    .forEach(
-      button => {
+    .querySelectorAll('[data-timer-start]')
+    .forEach(button => {
 
-        button.addEventListener(
-          'click',
-          () => {
+      button.addEventListener(
+        'click',
+        () => {
 
-            const id =
-              button.dataset.video;
+          const timerId =
+            button.dataset.timer;
 
-            const container =
-              document.getElementById(
-                `video-${id}`
-              );
+          const state =
+            timerStates[timerId];
 
-            if (
-              container.classList.contains(
-                'show'
-              )
-            ) {
-
-              container.classList.remove(
-                'show'
-              );
-
-              button.textContent =
-                t('watchVideo');
-
-            } else {
-
-              container.classList.add(
-                'show'
-              );
-
-              button.textContent =
-                t('closeVideo');
-            }
+          if (!state) {
+            return;
           }
-        );
-      }
-    );
-}
 
+          if (state.running) {
 
-/* =========================================================
-   EXERCISE HTML
-========================================================= */
+            pauseTimer(
+              timerId
+            );
 
-function renderExercise(
-  session,
-  block,
-  blockIndex,
-  exercise,
-  exerciseIndex,
-  data
-) {
+          } else {
 
-  const exerciseKey =
-    `${blockIndex}-${exerciseIndex}`;
+            startTimer(
+              timerId
+            );
 
-  const checked =
-    data.exercises &&
-    data.exercises[exerciseKey]
-      ? 'checked'
-      : '';
+          }
 
-  const videoId =
-    exercise.youtubeId;
-
-  let videoHTML = '';
-
-  if (videoId) {
-
-    videoHTML = `
-
-      <button
-        type="button"
-        class="video-button"
-        data-video="${videoId}"
-      >
-        ${t('watchVideo')}
-      </button>
-
-      <div
-        id="video-${videoId}"
-        class="video-container"
-      >
-
-        <iframe
-          src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&playsinline=1"
-          title="${escapeHtml(exercise.name[language])}"
-          loading="lazy"
-          allowfullscreen
-        ></iframe>
-
-        <a
-          class="youtube-link"
-          href="https://www.youtube.com/watch?v=${videoId}"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          ${t('openYoutube')}
-        </a>
-
-      </div>
-    `;
-  }
-
-
-  return `
-
-    <div class="exercise">
-
-      <div class="exercise-top">
-
-        <input
-          type="checkbox"
-          class="exercise-check"
-          data-exercise="${exerciseKey}"
-          ${checked}
-        >
-
-        <div>
-
-          <div class="exercise-name">
-            ${exercise.name[language]}
-          </div>
-
-          <div class="prescription">
-            ${exercise.prescription[language]}
-          </div>
-
-          ${videoHTML}
-
-        </div>
-
-      </div>
-
-    </div>
-  `;
-}
-
-
-/* =========================================================
-   WEEK NAVIGATION
-========================================================= */
-
-function changeWeek(direction) {
-
-  week.setDate(
-    week.getDate() +
-    direction * 7
-  );
-
-  render();
-}
-
-
-/* =========================================================
-   CLEAR WEEK
-========================================================= */
-
-function clearWeek() {
-
-  const message =
-    language === 'pt'
-      ? 'Tem certeza que quer apagar todos os registros desta semana?'
-      : 'Are you sure you want to delete all records from this week?';
-
-  if (!confirm(message)) {
-    return;
-  }
-
-  sessions.forEach(
-    session => {
-
-      localStorage.removeItem(
-        storageKey(session.id)
+        }
       );
+
+    });
+
+
+  document
+    .querySelectorAll('[data-timer-reset]')
+    .forEach(button => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+          resetTimer(
+            button.dataset.timer
+          );
+
+        }
+      );
+
+    });
+
+
+  document
+    .querySelectorAll('[data-timer-preset]')
+    .forEach(button => {
+
+      button.addEventListener(
+        'click',
+        () => {
+
+          setTimerDuration(
+            button.dataset.timer,
+            Number(button.dataset.seconds)
+          );
+
+        }
+      );
+
+    });
+
+
+  document
+    .querySelectorAll('[data-timer]')
+    .forEach(button => {
+
+      if (
+        button.dataset.timer &&
+        button.classList.contains('timer-preset')
+      ) {
+        return;
+      }
+
+    });
+
+}
+
+
+document
+  .getElementById('previous-week')
+  .addEventListener(
+    'click',
+    () => {
+
+      stopAllTimers();
+
+      week =
+        new Date(week);
+
+      week.setDate(
+        week.getDate() - 7
+      );
+
+      activeIndex = 0;
+
+      render();
+
     }
   );
 
-  render();
-}
 
+document
+  .getElementById('next-week')
+  .addEventListener(
+    'click',
+    () => {
 
-/* =========================================================
-   LANGUAGE SWITCH
-========================================================= */
+      stopAllTimers();
 
-function setLanguage(lang) {
+      week =
+        new Date(week);
 
-  language = lang;
+      week.setDate(
+        week.getDate() + 7
+      );
 
-  localStorage.setItem(
-    'treino-language',
-    lang
+      activeIndex = 0;
+
+      render();
+
+    }
   );
 
-  render();
-}
+
+document
+  .getElementById('pt-button')
+  .addEventListener(
+    'click',
+    () => {
+
+      language = 'pt';
+
+      localStorage.setItem(
+        'treino-language',
+        language
+      );
+
+      render();
+
+    }
+  );
 
 
-/* =========================================================
-   SECURITY / TEXT ESCAPING
-========================================================= */
+document
+  .getElementById('en-button')
+  .addEventListener(
+    'click',
+    () => {
 
-function escapeHtml(value) {
+      language = 'en';
 
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
-}
+      localStorage.setItem(
+        'treino-language',
+        language
+      );
+
+      render();
+
+    }
+  );
 
 
-/* =========================================================
-   START
-========================================================= */
+document
+  .getElementById('clear-week')
+  .addEventListener(
+    'click',
+    () => {
+
+      const message =
+        language === 'pt'
+          ? 'Tem certeza que deseja apagar todos os registros desta semana?'
+          : 'Are you sure you want to delete all records from this week?';
+
+      if (
+        !window.confirm(message)
+      ) {
+        return;
+      }
+
+      sessions.forEach(
+        session => {
+
+          localStorage.removeItem(
+            storageKey(session.id)
+          );
+
+        }
+      );
+
+      render();
+
+    }
+  );
+
+
+window.addEventListener(
+  'beforeunload',
+  () => {
+
+    stopAllTimers();
+
+  }
+);
+
 
 render();
 
