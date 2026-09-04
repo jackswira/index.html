@@ -1,912 +1,1021 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta charset="utf-8">
+<title>Treino de força</title>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  >
+<style>
+  * {
+    box-sizing: border-box;
+  }
 
-  <meta
-    name="apple-mobile-web-app-capable"
-    content="yes"
-  >
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f5f5f5;
+    color: #222;
+    line-height: 1.45;
+  }
 
-  <meta
-    name="apple-mobile-web-app-status-bar-style"
-    content="default"
-  >
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
 
-  <meta
-    name="theme-color"
-    content="#111827"
-  >
+  header {
+    margin-bottom: 16px;
+  }
 
-  <title>Treino de força</title>
+  h1 {
+    margin: 0 0 12px;
+    font-size: 28px;
+  }
 
+  h2 {
+    margin: 0;
+    font-size: 22px;
+  }
 
-  <style>
+  h3 {
+    margin: 18px 0 8px;
+    font-size: 17px;
+  }
 
-    :root {
-      --bg:#f3f4f6;
-      --card:#fff;
-      --ink:#111827;
-      --muted:#6b7280;
-      --line:#e5e7eb;
-      --accent:#2563eb;
-      --soft:#eff6ff;
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .language-switch {
+    display: flex;
+    gap: 5px;
+  }
+
+  .lang-btn {
+    border: 1px solid #ccc;
+    background: white;
+    color: #555;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  .lang-btn.active {
+    background: #222;
+    color: white;
+    border-color: #222;
+  }
+
+  .week-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin: 14px 0;
+  }
+
+  .week-nav button,
+  .clear-btn {
+    border: 1px solid #ccc;
+    background: white;
+    color: #222;
+    border-radius: 9px;
+    padding: 9px 12px;
+    cursor: pointer;
+  }
+
+  .week-nav button:hover,
+  .clear-btn:hover {
+    background: #eee;
+  }
+
+  .week-label {
+    font-weight: bold;
+    text-align: center;
+  }
+
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    margin-bottom: 18px;
+  }
+
+  .day-btn {
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 9px;
+    padding: 8px 3px;
+    cursor: pointer;
+    font-size: 12px;
+  }
+
+  .day-btn.active {
+    background: #222;
+    color: white;
+    border-color: #222;
+  }
+
+  .day-name {
+    font-weight: bold;
+    display: block;
+  }
+
+  .day-date {
+    display: block;
+    margin-top: 2px;
+    opacity: 0.8;
+  }
+
+  .session {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  }
+
+  .session-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .session-title {
+    font-size: 21px;
+    font-weight: bold;
+  }
+
+  .session-type {
+    font-size: 12px;
+    color: #666;
+    margin-top: 3px;
+  }
+
+  .complete-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    font-size: 13px;
+  }
+
+  .block {
+    margin-top: 16px;
+  }
+
+  .block-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    font-size: 15px;
+  }
+
+  .exercise {
+    border: 1px solid #e1e1e1;
+    border-radius: 11px;
+    padding: 12px;
+    margin-bottom: 8px;
+    background: #fafafa;
+  }
+
+  .exercise-top {
+    display: flex;
+    gap: 9px;
+    align-items: flex-start;
+  }
+
+  .exercise-check {
+    margin-top: 3px;
+  }
+
+  .exercise-name {
+    font-weight: bold;
+    flex: 1;
+  }
+
+  .prescription {
+    color: #555;
+    font-size: 13px;
+    margin-top: 3px;
+  }
+
+  .video-button {
+    display: inline-block;
+    margin-top: 9px;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 8px;
+    padding: 7px 9px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .video-button:hover {
+    background: #eee;
+  }
+
+  .video-container {
+    display: none;
+    margin-top: 10px;
+  }
+
+  .video-container.show {
+    display: block;
+  }
+
+  .video-container iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 9px;
+  }
+
+  .youtube-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: #b00000;
+    text-decoration: none;
+  }
+
+  .youtube-link:hover {
+    text-decoration: underline;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 80px;
+    resize: vertical;
+    border: 1px solid #ccc;
+    border-radius: 9px;
+    padding: 10px;
+    font: inherit;
+    font-size: 13px;
+  }
+
+  .set-guide {
+    margin-top: 18px;
+    padding: 14px;
+    background: #f0f0f0;
+    border-radius: 11px;
+    font-size: 13px;
+  }
+
+  .set-guide strong:first-child {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .set-guide p {
+    margin: 8px 0;
+  }
+
+  .clear-area {
+    margin-top: 16px;
+    text-align: center;
+  }
+
+  .clear-btn {
+    color: #8a0000;
+    border-color: #d5b5b5;
+  }
+
+  .saved-message {
+    text-align: center;
+    color: #777;
+    font-size: 12px;
+    margin-top: 18px;
+  }
+
+  @media (max-width: 520px) {
+    .container {
+      padding: 14px 10px 30px;
     }
-
-
-    * {
-      box-sizing:border-box;
-    }
-
-
-    body {
-      margin:0;
-      background:var(--bg);
-      color:var(--ink);
-      font:16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    }
-
-
-    header {
-      background:#111827;
-      color:white;
-      padding:22px 16px 18px;
-      position:sticky;
-      top:0;
-      z-index:5;
-    }
-
 
     h1 {
-      margin:0 0 4px;
-      font-size:24px;
+      font-size: 24px;
     }
 
-
-    h2 {
-      margin:0;
-      font-size:20px;
+    .days {
+      gap: 3px;
     }
 
-
-    p {
-      margin:6px 0;
+    .day-btn {
+      font-size: 10px;
+      padding: 7px 2px;
     }
-
-
-    .subtitle {
-      color:#d1d5db;
-      font-size:14px;
-    }
-
-
-    main {
-      max-width:720px;
-      margin:auto;
-      padding:16px;
-    }
-
-
-    .weekbar {
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:8px;
-      margin-bottom:14px;
-    }
-
-
-    button {
-      border:0;
-      border-radius:10px;
-      padding:10px 13px;
-      font-weight:600;
-      background:#e5e7eb;
-      color:var(--ink);
-      font-size:14px;
-      cursor:pointer;
-    }
-
-
-    button.primary {
-      background:var(--accent);
-      color:white;
-    }
-
-
-    button.danger {
-      background:#fee2e2;
-      color:#991b1b;
-    }
-
-
-    .weeklabel {
-      text-align:center;
-      font-weight:700;
-      flex:1;
-    }
-
-
-    /* ==========================================================
-       GUIA BI-SET / TRI-SET
-       ========================================================== */
-
-    .set-guide {
-      background:var(--soft);
-      border:1px solid #bfdbfe;
-      border-radius:12px;
-      padding:10px 12px;
-      margin-bottom:16px;
-    }
-
-
-    .set-guide summary {
-      cursor:pointer;
-      font-weight:700;
-      color:var(--accent);
-      font-size:14px;
-    }
-
-
-    .set-guide p {
-      font-size:13px;
-      line-height:1.5;
-      margin:10px 2px 4px;
-      color:var(--ink);
-    }
-
-
-    .schedule {
-      display:grid;
-      grid-template-columns:repeat(7,1fr);
-      gap:5px;
-      margin-bottom:16px;
-    }
-
-
-    .day {
-      text-align:center;
-      padding:8px 2px;
-      border-radius:9px;
-      background:white;
-      border:1px solid var(--line);
-      font-size:12px;
-    }
-
-
-    .day b {
-      display:block;
-      font-size:11px;
-      color:var(--muted);
-    }
-
-
-    .day.active {
-      background:var(--soft);
-      border-color:#93c5fd;
-    }
-
 
     .session {
-      display:none;
+      padding: 14px;
     }
 
-
-    .session.active {
-      display:block;
+    .session-header {
+      flex-direction: column;
     }
 
-
-    .card {
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:14px;
-      margin-bottom:12px;
-      box-shadow:0 1px 2px #00000008;
+    .complete-label {
+      align-self: flex-start;
     }
-
-
-    .sessionhead {
-      display:flex;
-      justify-content:space-between;
-      align-items:start;
-      gap:10px;
-      margin-bottom:12px;
-    }
-
-
-    .focus {
-      color:var(--muted);
-      font-size:14px;
-    }
-
-
-    .complete {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      white-space:nowrap;
-      font-size:13px;
-    }
-
-
-    input[type=checkbox] {
-      width:20px;
-      height:20px;
-      accent-color:var(--accent);
-    }
-
-
-    .block {
-      margin:14px 0;
-      padding-top:10px;
-      border-top:1px solid var(--line);
-    }
-
-
-    .blocktitle {
-      font-size:13px;
-      font-weight:800;
-      color:var(--accent);
-      margin-bottom:8px;
-      text-transform:uppercase;
-      letter-spacing:.03em;
-    }
-
-
-    .exercise {
-      display:grid;
-      grid-template-columns:28px 1fr;
-      gap:8px;
-      padding:10px 0;
-      border-bottom:1px solid #f0f0f0;
-    }
-
-
-    .exercise:last-child {
-      border-bottom:0;
-    }
-
-
-    .exercise strong {
-      display:block;
-      font-size:15px;
-    }
-
-
-    .prescription {
-      color:var(--muted);
-      font-size:13px;
-      margin-top:3px;
-    }
-
-
-    /* ==========================================================
-       VÍDEOS
-       ========================================================== */
-
-    .video-toggle {
-      display:inline-block;
-      margin-top:9px;
-      padding:7px 10px;
-      border-radius:8px;
-      background:var(--soft);
-      color:var(--accent);
-      font-size:13px;
-      font-weight:700;
-    }
-
-
-    .video-container {
-      display:none;
-      margin-top:10px;
-      overflow:hidden;
-      border-radius:10px;
-      background:#000;
-    }
-
-
-    .video-container.show {
-      display:block;
-    }
-
-
-    .video-wrapper {
-      position:relative;
-      width:100%;
-      padding-bottom:56.25%;
-      height:0;
-      background:#000;
-    }
-
-
-    .video-wrapper iframe {
-      position:absolute;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      border:0;
-    }
-
-
-    .youtube-fallback {
-      display:block;
-      padding:10px;
-      background:#111827;
-      text-align:center;
-    }
-
-
-    .youtube-link {
-      display:inline-block;
-      background:#dc2626;
-      color:white;
-      text-decoration:none;
-      border-radius:8px;
-      padding:8px 12px;
-      font-size:13px;
-      font-weight:700;
-    }
-
-
-    textarea {
-      width:100%;
-      min-height:54px;
-      margin-top:8px;
-      padding:9px;
-      border:1px solid var(--line);
-      border-radius:9px;
-      resize:vertical;
-      font:14px inherit;
-    }
-
-
-    .notes label {
-      display:block;
-      font-size:13px;
-      font-weight:700;
-      margin:4px 0;
-    }
-
-
-    .saved {
-      color:#166534;
-      font-size:13px;
-      margin-left:8px;
-      opacity:0;
-      transition:opacity .2s;
-    }
-
-
-    .saved.show {
-      opacity:1;
-    }
-
-
-    footer {
-      color:var(--muted);
-      font-size:13px;
-      text-align:center;
-      padding:10px 0 30px;
-    }
-
-
-    @media (max-width:480px) {
-
-      main {
-        padding:12px;
-      }
-
-      .schedule {
-        gap:3px;
-      }
-
-      .day {
-        font-size:11px;
-        padding:7px 1px;
-      }
-
-      .sessionhead {
-        flex-direction:column;
-      }
-
-    }
-
-  </style>
-
+  }
+</style>
 </head>
-
 
 <body>
 
+<div class="container">
 
-<header>
+  <header>
+    <div class="top-row">
+      <h1 id="appTitle">Treino de força</h1>
 
-  <h1>Treino de força</h1>
+      <div class="language-switch">
+        <button
+          id="langPT"
+          class="lang-btn active"
+          onclick="setLanguage('pt')"
+        >
+          🇧🇷 PT
+        </button>
 
-  <div class="subtitle">
-    Marque o que fez e registre repetições, nível e comentários.
-  </div>
+        <button
+          id="langEN"
+          class="lang-btn"
+          onclick="setLanguage('en')"
+        >
+          🇺🇸 EN
+        </button>
+      </div>
+    </div>
 
-</header>
+    <div class="week-nav">
+      <button onclick="changeWeek(-1)" id="previousBtn">
+        ← Semana anterior
+      </button>
 
+      <div class="week-label" id="weekLabel"></div>
 
-<main>
+      <button onclick="changeWeek(1)" id="nextBtn">
+        Próxima semana →
+      </button>
+    </div>
 
+    <div class="days" id="days"></div>
+  </header>
 
-  <!-- ==========================================================
-       NAVEGAÇÃO DA SEMANA
-       ========================================================== -->
+  <main id="app"></main>
 
-  <div class="weekbar">
-
-    <button id="prev">
-      ‹ Semana
-    </button>
-
-    <div
-      class="weeklabel"
-      id="weekLabel"
-    ></div>
-
-    <button id="next">
-      Semana ›
-    </button>
-
-  </div>
-
-
-  <!-- ==========================================================
-       GUIA BI-SET / TRI-SET
-       ========================================================== -->
-
-  <div class="set-guide">
-
-    <details>
-
-      <summary>
-        Como fazer Bi-set e Tri-set?
-      </summary>
-
-
-      <p>
-
-        <strong>Bi-set:</strong>
-        faça A1 → A2 em sequência, com pouca ou nenhuma pausa.
-        Depois dos dois exercícios, descanse o tempo indicado e
-        repita a rodada.
-
-      </p>
-
-
-      <p>
-
-        <strong>Tri-set:</strong>
-        faça A1 → A2 → A3 em sequência, com pouca ou nenhuma pausa.
-        Depois dos três exercícios, descanse o tempo indicado e
-        repita a rodada.
-
-      </p>
-
-
-      <p>
-
-        <strong>Importante:</strong>
-        mantenha a técnica e o esforço planejado.
-        Se a execução começar a piorar, aumente o descanso.
-        A ideia é ganhar eficiência, não fazer os exercícios com pressa.
-
-      </p>
-
-    </details>
-
-  </div>
-
-
-  <!-- ==========================================================
-       DIAS
-       ========================================================== -->
-
-  <div
-    class="schedule"
-    id="schedule"
-  ></div>
-
-
-  <!-- ==========================================================
-       SESSÕES
-       ========================================================== -->
-
-  <div id="sessions"></div>
-
-
-  <button
-    class="danger"
-    id="clearWeek"
-  >
-    Limpar registros desta semana
-  </button>
-
-
-  <footer>
-    Os registros ficam salvos neste dispositivo, no navegador.
-  </footer>
-
-
-</main>
-
+</div>
 
 <script>
 
+/* =========================================================
+   LANGUAGE
+========================================================= */
 
-/* ================================================================
-   TREINOS
-   ================================================================ */
+let language = localStorage.getItem('treino-language') || 'pt';
+
+const translations = {
+
+  pt: {
+    title: 'Treino de força',
+
+    previous: '← Semana anterior',
+    next: 'Próxima semana →',
+
+    sessionComplete: 'Sessão concluída',
+
+    watchVideo: '▶ Ver vídeo de execução',
+    closeVideo: '■ Fechar vídeo',
+    openYoutube: '▶ Abrir no YouTube',
+
+    observations: 'Observações',
+    sessionComments: 'Comentários da sessão',
+
+    notesPlaceholder:
+      'Registre cargas, repetições, dificuldade, dor, ajustes ou qualquer observação...',
+
+    commentsPlaceholder:
+      'Como foi a sessão? Energia, técnica, recuperação, dificuldades...',
+
+    clear: 'Limpar registros desta semana',
+
+    saved:
+      'Os registros ficam salvos neste dispositivo, no navegador.',
+
+    guideTitle:
+      'Como fazer Bi-set e Tri-set',
+
+    biSet:
+      '<strong>Bi-set:</strong> faça A1 → A2 em sequência, com pouca ou nenhuma pausa. Depois dos dois exercícios, descanse o tempo indicado e repita a rodada.',
+
+    triSet:
+      '<strong>Tri-set:</strong> faça A1 → A2 → A3 em sequência, com pouca ou nenhuma pausa. Depois dos três exercícios, descanse o tempo indicado e repita a rodada.',
+
+    important:
+      '<strong>Importante:</strong> mantenha a técnica e o esforço planejado. Se a execução começar a piorar, aumente o descanso. A ideia é ganhar eficiência, não fazer os exercícios com pressa.',
+
+    days: [
+      'Seg',
+      'Ter',
+      'Qua',
+      'Qui',
+      'Sex',
+      'Sáb',
+      'Dom'
+    ]
+  },
+
+  en: {
+    title: 'Strength Training',
+
+    previous: '← Previous week',
+    next: 'Next week →',
+
+    sessionComplete: 'Session completed',
+
+    watchVideo: '▶ Watch execution video',
+    closeVideo: '■ Close video',
+    openYoutube: '▶ Open on YouTube',
+
+    observations: 'Notes',
+    sessionComments: 'Session comments',
+
+    notesPlaceholder:
+      'Record loads, repetitions, difficulty, pain, adjustments, or anything else you noticed...',
+
+    commentsPlaceholder:
+      'How was the session? Energy, technique, recovery, difficulties...',
+
+    clear: 'Clear this week’s records',
+
+    saved:
+      'Your records are saved on this device, in this browser.',
+
+    guideTitle:
+      'How to do Bi-sets and Tri-sets',
+
+    biSet:
+      '<strong>Bi-set:</strong> perform A1 → A2 in sequence, with little or no rest between exercises. After both exercises, rest for the indicated time and repeat the round.',
+
+    triSet:
+      '<strong>Tri-set:</strong> perform A1 → A2 → A3 in sequence, with little or no rest between exercises. After all three exercises, rest for the indicated time and repeat the round.',
+
+    important:
+      '<strong>Important:</strong> maintain good technique and the planned effort. If your execution starts to deteriorate, take more rest. The goal is efficiency, not rushing.',
+
+    days: [
+      'Mon',
+      'Tue',
+      'Wed',
+      'Thu',
+      'Fri',
+      'Sat',
+      'Sun'
+    ]
+  }
+};
+
+function t(key) {
+  return translations[language][key] || key;
+}
+
+
+/* =========================================================
+   WORKOUT DATA
+========================================================= */
 
 const sessions = [
 
-
-  /* ============================================================
-     D1
-     ============================================================ */
-
   {
-    id:'d1',
-    day:'SEG',
-    title:'D1 — Glúteos, pernas e empurrar',
-    focus:'RDL, pistol e flexão',
+    id: 'D1',
+    day: 0,
 
-    blocks:[
+    title: {
+      pt: 'D1 — Glúteos, pernas e empurrar',
+      en: 'D1 — Glutes, legs & pushing'
+    },
+
+    type: {
+      pt: 'Força',
+      en: 'Strength'
+    },
+
+    blocks: [
 
       {
-        name:'Bi-set A',
-        rest:'90 s após A1 + A2',
-
-        exercises:[
+        type: 'Bi-set',
+        exercises: [
 
           {
-            name:'RDL unilateral com apoio',
-            prescription:'3 × 5–8 por perna · RIR 3',
-            youtubeId:'f7rPmUEXrZg'
+            name: {
+              pt: 'RDL unilateral com apoio',
+              en: 'Supported single-leg RDL'
+            },
+
+            prescription: {
+              pt: '3 × 5–8 por perna · RIR 3',
+              en: '3 × 5–8 per leg · RIR 3'
+            },
+
+            youtubeId: 'f7rPmUEXrZg'
           },
 
           {
-            name:'Flexão',
-            prescription:'3 × 5–8 · RIR 2–3',
-            youtubeId:'8FD89xF4l1A'
-          }
+            name: {
+              pt: 'Flexão',
+              en: 'Push-up'
+            },
 
+            prescription: {
+              pt: '3 × 5–8 · RIR 2–3',
+              en: '3 × 5–8 · RIR 2–3'
+            },
+
+            youtubeId: '8FD89xF4l1A'
+          }
         ]
       },
 
-
       {
-        name:'Tri-set B',
-        rest:'60–90 s após cada rodada',
-
-        exercises:[
+        type: 'Tri-set',
+        exercises: [
 
           {
-            name:'Pistol squat com apoio',
-            prescription:'2 × 4–6 por perna · RIR 3',
-            youtubeId:'fUGQ7oMEIFI'
+            name: {
+              pt: 'Pistol squat com apoio',
+              en: 'Supported pistol squat'
+            },
+
+            prescription: {
+              pt: '2 × 4–6 por perna · RIR 3',
+              en: '2 × 4–6 per leg · RIR 3'
+            },
+
+            youtubeId: 'fUGQ7oMEIFI'
           },
 
           {
-            name:'Abdução com mini band',
-            prescription:'2 × 15–25 por lado · RIR 2–3',
-            youtubeId:'gCaHof9C2YE'
+            name: {
+              pt: 'Abdução com mini band',
+              en: 'Mini-band hip abduction'
+            },
+
+            prescription: {
+              pt: '2 × 15–25 por lado · RIR 2–3',
+              en: '2 × 15–25 per side · RIR 2–3'
+            },
+
+            youtubeId: 'gCaHof9C2YE'
           },
 
           {
-            name:'Calf raise',
-            prescription:'2 × 12–20 · RIR 2',
-            youtubeId:'PJGXyldAWk4'
+            name: {
+              pt: 'Elevação de panturrilha',
+              en: 'Calf raise'
+            },
+
+            prescription: {
+              pt: '2 × 12–20 · RIR 2',
+              en: '2 × 12–20 · RIR 2'
+            },
+
+            youtubeId: 'PJGXyldAWk4'
           }
-
         ]
       }
-
     ]
   },
 
 
-  /* ============================================================
-     BOULDER A
-     ============================================================ */
-
   {
-    id:'b1',
-    day:'TER',
-    title:'Boulder A',
-    focus:'Técnica e intensidade moderada',
+    id: 'B1',
+    day: 1,
 
-    blocks:[
+    title: {
+      pt: 'Boulder A',
+      en: 'Bouldering A'
+    },
+
+    type: {
+      pt: 'Boulder',
+      en: 'Bouldering'
+    },
+
+    blocks: [
 
       {
-        name:'Sessão',
-        rest:'Pare antes da exaustão dos dedos',
-
-        exercises:[
+        type: 'Boulder',
+        exercises: [
 
           {
-            name:'Boulder',
-            prescription:'30 min · registre graus/problemas tentados'
-          }
+            name: {
+              pt: 'Boulder',
+              en: 'Bouldering'
+            },
 
+            prescription: {
+              pt: '30 min · registre graus/problemas tentados',
+              en: '30 min · record grades/problems attempted'
+            },
+
+            youtubeId: null
+          }
         ]
       }
-
     ]
   },
 
 
-  /* ============================================================
-     D2
-     ============================================================ */
-
   {
-    id:'d2',
-    day:'QUA',
-    title:'D2 — Unilateral, glúteo médio e core',
-    focus:'Sessão leve após o boulder',
+    id: 'D2',
+    day: 2,
 
-    blocks:[
+    title: {
+      pt: 'D2 — Unilateral, glúteo médio e core',
+      en: 'D2 — Unilateral, glute medius & core'
+    },
+
+    type: {
+      pt: 'Força',
+      en: 'Strength'
+    },
+
+    blocks: [
 
       {
-        name:'Bi-set A',
-        rest:'60 s após A1 + A2',
-
-        exercises:[
+        type: 'Bi-set',
+        exercises: [
 
           {
-            name:'High step assistido',
-            prescription:'2 × 5–8 por perna · RIR 3',
-            youtubeId:'j8KN0jwWaRA'
+            name: {
+              pt: 'High step assistido',
+              en: 'Assisted high step-up'
+            },
+
+            prescription: {
+              pt: '2 × 5–8 por perna · RIR 3',
+              en: '2 × 5–8 per leg · RIR 3'
+            },
+
+            youtubeId: 'j8KN0jwWaRA'
           },
 
           {
-            name:'Dead bug',
-            prescription:'2 × 8–10 por lado · RIR 3',
-            youtubeId:'bsOYjx22OSc'
-          }
+            name: {
+              pt: 'Dead bug',
+              en: 'Dead bug'
+            },
 
+            prescription: {
+              pt: '2 × 8–10 por lado · RIR 3',
+              en: '2 × 8–10 per side · RIR 3'
+            },
+
+            youtubeId: 'bsOYjx22OSc'
+          }
         ]
       },
 
-
       {
-        name:'Tri-set B',
-        rest:'45–60 s após cada rodada',
-
-        exercises:[
+        type: 'Tri-set',
+        exercises: [
 
           {
-            name:'Glute bridge com pausa de 2 s',
-            prescription:'2 × 8–12 · RIR 3',
-            youtubeId:'WEvLyLsV0xs'
+            name: {
+              pt: 'Glute bridge com pausa de 2 s',
+              en: 'Glute bridge with 2-sec pause'
+            },
+
+            prescription: {
+              pt: '2 × 8–12 · RIR 3',
+              en: '2 × 8–12 · RIR 3'
+            },
+
+            youtubeId: 'WEvLyLsV0xs'
           },
 
           {
-            name:'Abdução com mini band',
-            prescription:'2 × 15–25 por lado · RIR 3',
-            youtubeId:'gCaHof9C2YE'
+            name: {
+              pt: 'Abdução com mini band',
+              en: 'Mini-band hip abduction'
+            },
+
+            prescription: {
+              pt: '2 × 15–25 por lado · RIR 3',
+              en: '2 × 15–25 per side · RIR 3'
+            },
+
+            youtubeId: 'gCaHof9C2YE'
           },
 
           {
-            name:'Rotação cubana',
-            prescription:'2 × 12–15 · RIR 4',
-            youtubeId:'swQXM6CykFg'
+            name: {
+              pt: 'Rotação cubana',
+              en: 'Cuban rotation'
+            },
+
+            prescription: {
+              pt: '2 × 12–15 · RIR 4',
+              en: '2 × 12–15 · RIR 4'
+            },
+
+            youtubeId: 'swQXM6CykFg'
           }
-
         ]
       }
-
     ]
   },
 
 
-  /* ============================================================
-     BOULDER B
-     ============================================================ */
-
   {
-    id:'b2',
-    day:'QUI',
-    title:'Boulder B',
-    focus:'Sessão mais intensa, sem excesso de tentativas',
+    id: 'B2',
+    day: 3,
 
-    blocks:[
+    title: {
+      pt: 'Boulder B',
+      en: 'Bouldering B'
+    },
+
+    type: {
+      pt: 'Boulder',
+      en: 'Bouldering'
+    },
+
+    blocks: [
 
       {
-        name:'Sessão',
-        rest:'Descanso completo entre tentativas',
-
-        exercises:[
+        type: 'Boulder',
+        exercises: [
 
           {
-            name:'Boulder',
-            prescription:'30 min · registre graus/problemas tentados'
-          }
+            name: {
+              pt: 'Boulder',
+              en: 'Bouldering'
+            },
 
+            prescription: {
+              pt: '30 min · registre graus/problemas tentados',
+              en: '30 min · record grades/problems attempted'
+            },
+
+            youtubeId: null
+          }
         ]
       }
-
     ]
   },
 
 
-  /* ============================================================
-     D3
-     ============================================================ */
-
   {
-    id:'d3',
-    day:'SEX',
-    title:'D3 — Posterior, glúteos e empurrar',
-    focus:'Hip thrust, posteriores e sissy squat',
+    id: 'D3',
+    day: 4,
 
-    blocks:[
+    title: {
+      pt: 'D3 — Posterior, glúteos e empurrar',
+      en: 'D3 — Posterior chain, glutes & pushing'
+    },
+
+    type: {
+      pt: 'Força',
+      en: 'Strength'
+    },
+
+    blocks: [
 
       {
-        name:'Bi-set A',
-        rest:'90 s após A1 + A2',
-
-        exercises:[
+        type: 'Bi-set',
+        exercises: [
 
           {
-            name:'Hamstring curl ou heel walkout',
-            prescription:'3 × 5–8 · RIR 3',
-            youtubeId:'CgfnzRoUo0M'
+            name: {
+              pt: 'Hamstring curl ou heel walkout',
+              en: 'Hamstring curl or heel walkout'
+            },
+
+            prescription: {
+              pt: '3 × 5–8 · RIR 3',
+              en: '3 × 5–8 · RIR 3'
+            },
+
+            youtubeId: 'CgfnzRoUo0M'
           },
 
           {
-            name:'Flexão',
-            prescription:'3 × 5–8 · RIR 2–3',
-            youtubeId:'8FD89xF4l1A'
-          }
+            name: {
+              pt: 'Flexão',
+              en: 'Push-up'
+            },
 
+            prescription: {
+              pt: '3 × 5–8 · RIR 2–3',
+              en: '3 × 5–8 · RIR 2–3'
+            },
+
+            youtubeId: '8FD89xF4l1A'
+          }
         ]
       },
 
-
       {
-        name:'Tri-set B',
-        rest:'75–90 s após cada rodada',
-
-        exercises:[
+        type: 'Tri-set',
+        exercises: [
 
           {
-            name:'Hip thrust ou glute bridge',
-            prescription:'2 × 8–12 · RIR 2–3',
-            youtubeId:'XhDoTO6K1a4'
+            name: {
+              pt: 'Hip thrust ou glute bridge',
+              en: 'Hip thrust or glute bridge'
+            },
+
+            prescription: {
+              pt: '2 × 8–12 · RIR 2–3',
+              en: '2 × 8–12 · RIR 2–3'
+            },
+
+            youtubeId: 'XhDoTO6K1a4'
           },
 
           {
-            name:'Sissy squat assistido',
-            prescription:'2 × 6–10 · RIR 3',
-            youtubeId:'z1IcOHr8Ff8'
+            name: {
+              pt: 'Sissy squat assistido',
+              en: 'Assisted sissy squat'
+            },
+
+            prescription: {
+              pt: '2 × 6–10 · RIR 3',
+              en: '2 × 6–10 · RIR 3'
+            },
+
+            youtubeId: 'z1IcOHr8Ff8'
           },
 
           {
-            name:'Calf raise',
-            prescription:'2 × 12–20 · RIR 2',
-            youtubeId:'PJGXyldAWk4'
+            name: {
+              pt: 'Elevação de panturrilha',
+              en: 'Calf raise'
+            },
+
+            prescription: {
+              pt: '2 × 12–20 · RIR 2',
+              en: '2 × 12–20 · RIR 2'
+            },
+
+            youtubeId: 'PJGXyldAWk4'
           }
-
         ]
       }
-
     ]
   },
 
 
-  /* ============================================================
-     D4
-     ============================================================ */
-
   {
-    id:'d4',
-    day:'SAB',
-    title:'D4 — Puxada controlada',
-    focus:'Pendurada alternada, excêntrica e remada',
+    id: 'D4',
+    day: 5,
 
-    blocks:[
+    title: {
+      pt: 'D4 — Puxada controlada',
+      en: 'D4 — Controlled pulling'
+    },
+
+    type: {
+      pt: 'Força',
+      en: 'Strength'
+    },
+
+    blocks: [
 
       {
-        name:'Bi-set A',
-        rest:'90–120 s',
-
-        exercises:[
+        type: 'Bi-set',
+        exercises: [
 
           {
-            name:'Pendurada ativa ou passiva',
-            prescription:'1 × tempo máximo técnico · alternar por semana',
-            youtubeId:'u5CUtgMF6XY'
+            name: {
+              pt: 'Pendurada ativa ou passiva',
+              en: 'Active or passive hang'
+            },
+
+            prescription: {
+              pt: '1 × tempo máximo técnico · alternar por semana',
+              en: '1 × maximum technical time · alternate weekly'
+            },
+
+            youtubeId: 'u5CUtgMF6XY'
           },
 
           {
-            name:'Rotação cubana',
-            prescription:'2 × 12–15 · RIR 4',
-            youtubeId:'swQXM6CykFg'
-          }
+            name: {
+              pt: 'Rotação cubana',
+              en: 'Cuban rotation'
+            },
 
+            prescription: {
+              pt: '2 × 12–15 · RIR 4',
+              en: '2 × 12–15 · RIR 4'
+            },
+
+            youtubeId: 'swQXM6CykFg'
+          }
         ]
       },
 
-
       {
-        name:'Tri-set B',
-        rest:'2–3 min após cada rodada',
-
-        exercises:[
+        type: 'Tri-set',
+        exercises: [
 
           {
-            name:'Barra excêntrica',
-            prescription:'2 × 1 · descida de 5–8 s',
-            youtubeId:'ae3WOMgrwN8'
+            name: {
+              pt: 'Barra excêntrica',
+              en: 'Eccentric pull-up'
+            },
+
+            prescription: {
+              pt: '2 × 1 · descida de 5–8 s',
+              en: '2 × 1 · 5–8 sec descent'
+            },
+
+            youtubeId: 'ae3WOMgrwN8'
           },
 
           {
-            name:'Single-leg glute bridge',
-            prescription:'2 × 8–10 por perna · RIR 3',
-            youtubeId:'ymRl2srlxKs'
+            name: {
+              pt: 'Glute bridge unilateral',
+              en: 'Single-leg glute bridge'
+            },
+
+            prescription: {
+              pt: '2 × 8–10 por perna · RIR 3',
+              en: '2 × 8–10 per leg · RIR 3'
+            },
+
+            youtubeId: 'ymRl2srlxKs'
           },
 
           {
-            name:'Remada invertida',
-            prescription:'2 × 6–8 · RIR 3',
-            youtubeId:'otn4KxEknKw'
+            name: {
+              pt: 'Remada invertida',
+              en: 'Inverted row'
+            },
+
+            prescription: {
+              pt: '2 × 6–8 · RIR 3',
+              en: '2 × 6–8 · RIR 3'
+            },
+
+            youtubeId: 'otn4KxEknKw'
           }
-
         ]
       }
-
     ]
+  },
+
+
+  {
+    id: 'REST',
+    day: 6,
+
+    title: {
+      pt: 'Descanso',
+      en: 'Rest day'
+    },
+
+    type: {
+      pt: 'Recuperação',
+      en: 'Recovery'
+    },
+
+    blocks: []
   }
 
 ];
 
 
-
-/* ================================================================
-   SEMANA
-   ================================================================ */
+/* =========================================================
+   DATE / WEEK
+========================================================= */
 
 let week = monday(new Date());
 
-
 let activeIndex =
-  Math.min(
-    (new Date().getDay() + 6) % 7,
-    6
-  );
-
+  Math.min((new Date().getDay() + 6) % 7, 6);
 
 if (activeIndex === 6) {
   activeIndex = 0;
 }
 
 
-
-/* ================================================================
-   FUNÇÕES DE DATA
-   ================================================================ */
-
 function monday(date) {
 
   const d = new Date(date);
 
-  d.setHours(12,0,0,0);
+  d.setHours(12, 0, 0, 0);
 
   const day = d.getDay();
 
@@ -915,757 +1024,681 @@ function monday(date) {
       ? -6
       : 1 - day;
 
-  d.setDate(
-    d.getDate() + diff
-  );
+  d.setDate(d.getDate() + diff);
 
   return d;
-
 }
-
 
 
 function key(date) {
-
-  return date
-    .toISOString()
-    .slice(0,10);
-
+  return date.toISOString().slice(0, 10);
 }
-
 
 
 function dateLabel(date) {
 
   return date.toLocaleDateString(
-    'pt-BR',
+    language === 'pt' ? 'pt-BR' : 'en-US',
     {
-      day:'2-digit',
-      month:'2-digit'
+      day: '2-digit',
+      month: '2-digit'
     }
   );
-
 }
 
 
-
-/* ================================================================
+/* =========================================================
    LOCAL STORAGE
-   ================================================================ */
+========================================================= */
 
 function storageKey(sessionId) {
 
   return `treino-${key(week)}-${sessionId}`;
-
 }
-
 
 
 function load(sessionId) {
 
-  return JSON.parse(
-    localStorage.getItem(
-      storageKey(sessionId)
-    ) || '{}'
-  );
+  try {
 
+    return JSON.parse(
+      localStorage.getItem(storageKey(sessionId)) || '{}'
+    );
+
+  } catch {
+
+    return {};
+  }
 }
 
 
-
-function save(sessionId,data) {
+function save(sessionId, data) {
 
   localStorage.setItem(
     storageKey(sessionId),
     JSON.stringify(data)
   );
-
 }
 
 
+/* =========================================================
+   RENDER DAYS
+========================================================= */
 
-/* ================================================================
-   RENDER
-   ================================================================ */
+function renderDays() {
 
-function render() {
+  const container =
+    document.getElementById('days');
 
+  container.innerHTML = '';
 
-  document.getElementById(
-    'weekLabel'
-  ).textContent =
-    `Semana de ${dateLabel(week)}`;
+  for (let i = 0; i < 7; i++) {
 
+    const date = new Date(week);
 
-
-  /* -----------------------------
-     Dias
-     ----------------------------- */
-
-  const schedule =
-    document.getElementById(
-      'schedule'
+    date.setDate(
+      week.getDate() + i
     );
 
+    const button =
+      document.createElement('button');
 
-  schedule.innerHTML = '';
+    button.className =
+      'day-btn' +
+      (i === activeIndex ? ' active' : '');
 
+    button.innerHTML = `
+      <span class="day-name">
+        ${t('days')[i]}
+      </span>
 
-  sessions.forEach((s,i) => {
+      <span class="day-date">
+        ${dateLabel(date)}
+      </span>
+    `;
 
-
-    const el =
-      document.createElement(
-        'button'
-      );
-
-
-    el.className =
-      `day ${i === activeIndex ? 'active' : ''}`;
-
-
-    el.innerHTML =
-      `<b>${s.day}</b>${s.title.split('—')[0].trim()}`;
-
-
-    el.onclick = () => {
+    button.onclick = () => {
 
       activeIndex = i;
 
       render();
-
     };
 
-
-    schedule.appendChild(el);
-
-  });
-
+    container.appendChild(button);
+  }
+}
 
 
-  /* -----------------------------
-     Sessões
-     ----------------------------- */
+/* =========================================================
+   RENDER SESSION
+========================================================= */
 
-  const container =
-    document.getElementById(
-      'sessions'
+function render() {
+
+  document.documentElement.lang =
+    language === 'pt'
+      ? 'pt-BR'
+      : 'en';
+
+  document.getElementById('appTitle')
+    .textContent = t('title');
+
+  document.getElementById('previousBtn')
+    .textContent = t('previous');
+
+  document.getElementById('nextBtn')
+    .textContent = t('next');
+
+  document.getElementById('weekLabel')
+    .textContent =
+      `${t('days')[0]} ${dateLabel(week)} — ` +
+      `${t('days')[6]} ${dateLabel(
+        new Date(
+          week.getFullYear(),
+          week.getMonth(),
+          week.getDate() + 6
+        )
+      )}`;
+
+  document.getElementById('langPT')
+    .classList.toggle(
+      'active',
+      language === 'pt'
     );
 
+  document.getElementById('langEN')
+    .classList.toggle(
+      'active',
+      language === 'en'
+    );
 
-  container.innerHTML = '';
+  renderDays();
 
+  const session =
+    sessions.find(
+      s => s.day === activeIndex
+    );
 
-  sessions.forEach((s,si) => {
+  const app =
+    document.getElementById('app');
 
+  if (!session) {
 
-    const data =
-      load(s.id);
+    app.innerHTML = '';
 
+    return;
+  }
 
-    const section =
-      document.createElement(
-        'section'
-      );
+  const data =
+    load(session.id);
 
+  let html = `
 
-    section.className =
-      `session ${si === activeIndex ? 'active' : ''}`;
+    <section class="session">
 
+      <div class="session-header">
 
-    let html = `
+        <div>
 
-      <div class="card">
-
-        <div class="sessionhead">
-
-          <div>
-
-            <h2>
-              ${s.title}
-            </h2>
-
-            <div class="focus">
-              ${s.focus}
-            </div>
-
+          <div class="session-title">
+            ${session.title[language]}
           </div>
 
-
-          <label class="complete">
-
-            <input
-              type="checkbox"
-              data-session="${s.id}"
-              ${data.session ? 'checked' : ''}
-            >
-
-            Feita
-
-          </label>
+          <div class="session-type">
+            ${session.type[language]}
+          </div>
 
         </div>
 
-    `;
+        <label class="complete-label">
+
+          <input
+            type="checkbox"
+            id="sessionComplete"
+            ${data.complete ? 'checked' : ''}
+          >
+
+          ${t('sessionComplete')}
+
+        </label>
+
+      </div>
+  `;
 
 
+  session.blocks.forEach(
+    (block, blockIndex) => {
 
-    /* -----------------------------
-       Blocos
-       ----------------------------- */
+      if (block.type === 'Boulder') {
 
-    s.blocks.forEach((block,bi) => {
+        block.exercises.forEach(
+          (exercise, exerciseIndex) => {
+
+            html += renderExercise(
+              session,
+              block,
+              blockIndex,
+              exercise,
+              exerciseIndex,
+              data
+            );
+          }
+        );
+
+        return;
+      }
 
 
       html += `
 
         <div class="block">
 
-          <div class="blocktitle">
-            ${block.name} · ${block.rest}
+          <div class="block-title">
+            ${block.type}
           </div>
 
       `;
 
 
+      block.exercises.forEach(
+        (exercise, exerciseIndex) => {
 
-      /* -----------------------------
-         Exercícios
-         ----------------------------- */
-
-      block.exercises.forEach((ex,ei) => {
-
-
-        const id =
-          `${bi}-${ei}`;
-
-
-        const saved =
-          data[id] || {};
-
-
-        html += `
-
-          <div class="exercise">
-
-            <input
-              type="checkbox"
-              data-exercise="${s.id}|${id}"
-              ${saved.done ? 'checked' : ''}
-            >
-
-
-            <div>
-
-              <strong>
-                ${ex.name}
-              </strong>
-
-
-              <div class="prescription">
-                ${ex.prescription}
-              </div>
-
-        `;
-
-
-
-        /* ========================================================
-           VÍDEO
-           ======================================================== */
-
-        if (ex.youtubeId) {
-
-
-          const youtubeUrl =
-            `https://www.youtube.com/watch?v=${ex.youtubeId}`;
-
-
-          html += `
-
-            <button
-              type="button"
-              class="video-toggle"
-              data-video="${ex.youtubeId}"
-              data-youtube-url="${youtubeUrl}"
-            >
-              ▶ Ver vídeo de execução
-            </button>
-
-
-            <div class="video-container">
-
-              <div class="video-wrapper">
-
-                <iframe
-                  src=""
-                  title="Vídeo de execução: ${ex.name}"
-                  loading="lazy"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen>
-                </iframe>
-
-              </div>
-
-
-              <div class="youtube-fallback">
-
-                <a
-                  class="youtube-link"
-                  href="${youtubeUrl}"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  ▶ Abrir no YouTube
-                </a>
-
-              </div>
-
-            </div>
-
-          `;
+          html += renderExercise(
+            session,
+            block,
+            blockIndex,
+            exercise,
+            exerciseIndex,
+            data
+          );
 
         }
+      );
 
 
-
-        html += `
-
-              <textarea
-                data-note="${s.id}|${id}"
-                placeholder="Repetições realizadas, nível, dificuldade ou comentário..."
-              >${saved.note || ''}</textarea>
-
-            </div>
-
-          </div>
-
-        `;
-
-      });
+      html += `
+        </div>
+      `;
+    }
+  );
 
 
+  html += `
 
-      html += `</div>`;
+      <div class="block">
 
-    });
-
-
-
-    /* -----------------------------
-       Comentário
-       ----------------------------- */
-
-    html += `
-
-        <div class="notes">
-
-          <label>
-            Comentário da sessão
-          </label>
-
-
-          <textarea
-            data-session-note="${s.id}"
-            placeholder="Como foi a sessão? Dor, energia, recuperação..."
-          >${data.note || ''}</textarea>
-
-
-          <span
-            class="saved"
-            id="saved-${s.id}"
-          >
-            Salvo
-          </span>
-
+        <div class="block-title">
+          ${t('observations')}
         </div>
 
+        <textarea
+          id="sessionNotes"
+          placeholder="${t('notesPlaceholder')}"
+        >${escapeHtml(data.sessionNotes || '')}</textarea>
 
       </div>
 
-    `;
+      <div class="block">
 
+        <div class="block-title">
+          ${t('sessionComments')}
+        </div>
 
-    section.innerHTML =
-      html;
+        <textarea
+          id="sessionComments"
+          placeholder="${t('commentsPlaceholder')}"
+        >${escapeHtml(data.sessionComments || '')}</textarea>
 
+      </div>
 
-    container.appendChild(
-      section
-    );
 
-  });
+      <div class="set-guide">
 
+        <strong>
+          ${t('guideTitle')}
+        </strong>
 
-  bindEvents();
+        <p>
+          ${t('biSet')}
+        </p>
 
-}
+        <p>
+          ${t('triSet')}
+        </p>
 
+        <p>
+          ${t('important')}
+        </p>
 
+      </div>
 
-/* ================================================================
-   EVENTOS
-   ================================================================ */
+    </section>
 
-function bindEvents() {
 
+    <div class="clear-area">
 
-  /* -----------------------------
-     Sessão feita
-     ----------------------------- */
+      <button
+        class="clear-btn"
+        onclick="clearWeek()"
+      >
+        ${t('clear')}
+      </button>
 
-  document
-    .querySelectorAll('[data-session]')
-    .forEach(el => {
+    </div>
 
+    <div class="saved-message">
+      ${t('saved')}
+    </div>
+  `;
 
-      el.onchange = () => {
 
+  app.innerHTML = html;
 
-        const id =
-          el.dataset.session;
 
+  /* SESSION COMPLETE */
 
-        const data =
-          load(id);
-
-
-        data.session =
-          el.checked;
-
-
-        save(id,data);
-
-
-        flash(id);
-
-      };
-
-    });
-
-
-
-  /* -----------------------------
-     Exercício feito
-     ----------------------------- */
-
-  document
-    .querySelectorAll('[data-exercise]')
-    .forEach(el => {
-
-
-      el.onchange = () => {
-
-
-        const parts =
-          el.dataset.exercise.split('|');
-
-
-        const id =
-          parts[0];
-
-
-        const ex =
-          parts[1];
-
-
-        const data =
-          load(id);
-
-
-        data[ex] =
-          data[ex] || {};
-
-
-        data[ex].done =
-          el.checked;
-
-
-        save(id,data);
-
-
-        flash(id);
-
-      };
-
-    });
-
-
-
-  /* -----------------------------
-     Notas
-     ----------------------------- */
-
-  document
-    .querySelectorAll('[data-note]')
-    .forEach(el => {
-
-
-      el.oninput = () => {
-
-
-        const parts =
-          el.dataset.note.split('|');
-
-
-        const id =
-          parts[0];
-
-
-        const ex =
-          parts[1];
-
-
-        const data =
-          load(id);
-
-
-        data[ex] =
-          data[ex] || {};
-
-
-        data[ex].note =
-          el.value;
-
-
-        save(id,data);
-
-
-        flash(id);
-
-      };
-
-    });
-
-
-
-  /* -----------------------------
-     Comentário da sessão
-     ----------------------------- */
-
-  document
-    .querySelectorAll('[data-session-note]')
-    .forEach(el => {
-
-
-      el.oninput = () => {
-
-
-        const id =
-          el.dataset.sessionNote;
-
-
-        const data =
-          load(id);
-
-
-        data.note =
-          el.value;
-
-
-        save(id,data);
-
-
-        flash(id);
-
-      };
-
-    });
-
-
-
-  /* ============================================================
-     VÍDEOS DO YOUTUBE
-     ============================================================ */
-
-  document
-    .querySelectorAll('.video-toggle')
-    .forEach(button => {
-
-
-      button.onclick = () => {
-
-
-        const container =
-          button.nextElementSibling;
-
-
-        const iframe =
-          container.querySelector('iframe');
-
-
-        const videoId =
-          button.dataset.video;
-
-
-
-        /* -------------------------
-           Abrir
-           ------------------------- */
-
-        if (
-          !container.classList.contains('show')
-        ) {
-
-
-          iframe.src =
-            `https://www.youtube-nocookie.com/embed/${videoId}?rel=0&playsinline=1`;
-
-
-          container.classList.add(
-            'show'
-          );
-
-
-          button.textContent =
-            '▲ Ocultar vídeo';
-
-        }
-
-
-
-        /* -------------------------
-           Fechar
-           ------------------------- */
-
-        else {
-
-
-          iframe.src = '';
-
-
-          container.classList.remove(
-            'show'
-          );
-
-
-          button.textContent =
-            '▶ Ver vídeo de execução';
-
-        }
-
-      };
-
-    });
-
-}
-
-
-
-/* ================================================================
-   AVISO "SALVO"
-   ================================================================ */
-
-function flash(id) {
-
-
-  const el =
+  const complete =
     document.getElementById(
-      `saved-${id}`
+      'sessionComplete'
     );
 
-
-  if (!el) return;
-
-
-  el.classList.add(
-    'show'
-  );
-
-
-  setTimeout(
+  complete.addEventListener(
+    'change',
     () => {
 
-      el.classList.remove(
-        'show'
-      );
+      const current =
+        load(session.id);
 
-    },
-    800
+      current.complete =
+        complete.checked;
+
+      save(
+        session.id,
+        current
+      );
+    }
   );
 
+
+  /* NOTES */
+
+  const notes =
+    document.getElementById(
+      'sessionNotes'
+    );
+
+  notes.addEventListener(
+    'input',
+    () => {
+
+      const current =
+        load(session.id);
+
+      current.sessionNotes =
+        notes.value;
+
+      save(
+        session.id,
+        current
+      );
+    }
+  );
+
+
+  /* COMMENTS */
+
+  const comments =
+    document.getElementById(
+      'sessionComments'
+    );
+
+  comments.addEventListener(
+    'input',
+    () => {
+
+      const current =
+        load(session.id);
+
+      current.sessionComments =
+        comments.value;
+
+      save(
+        session.id,
+        current
+      );
+    }
+  );
+
+
+  /* EXERCISE CHECKBOXES */
+
+  document
+    .querySelectorAll(
+      '.exercise-check'
+    )
+    .forEach(
+      checkbox => {
+
+        checkbox.addEventListener(
+          'change',
+          () => {
+
+            const current =
+              load(session.id);
+
+            const exerciseKey =
+              checkbox.dataset.exercise;
+
+            if (!current.exercises) {
+              current.exercises = {};
+            }
+
+            current.exercises[
+              exerciseKey
+            ] =
+              checkbox.checked;
+
+            save(
+              session.id,
+              current
+            );
+          }
+        );
+      }
+    );
+
+
+  /* VIDEO BUTTONS */
+
+  document
+    .querySelectorAll(
+      '.video-button'
+    )
+    .forEach(
+      button => {
+
+        button.addEventListener(
+          'click',
+          () => {
+
+            const id =
+              button.dataset.video;
+
+            const container =
+              document.getElementById(
+                `video-${id}`
+              );
+
+            if (
+              container.classList.contains(
+                'show'
+              )
+            ) {
+
+              container.classList.remove(
+                'show'
+              );
+
+              button.textContent =
+                t('watchVideo');
+
+            } else {
+
+              container.classList.add(
+                'show'
+              );
+
+              button.textContent =
+                t('closeVideo');
+            }
+          }
+        );
+      }
+    );
 }
 
 
+/* =========================================================
+   EXERCISE HTML
+========================================================= */
 
-/* ================================================================
-   NAVEGAÇÃO
-   ================================================================ */
+function renderExercise(
+  session,
+  block,
+  blockIndex,
+  exercise,
+  exerciseIndex,
+  data
+) {
 
-document.getElementById(
-  'prev'
-).onclick = () => {
+  const exerciseKey =
+    `${blockIndex}-${exerciseIndex}`;
 
+  const checked =
+    data.exercises &&
+    data.exercises[exerciseKey]
+      ? 'checked'
+      : '';
+
+  const videoId =
+    exercise.youtubeId;
+
+  let videoHTML = '';
+
+  if (videoId) {
+
+    videoHTML = `
+
+      <button
+        type="button"
+        class="video-button"
+        data-video="${videoId}"
+      >
+        ${t('watchVideo')}
+      </button>
+
+      <div
+        id="video-${videoId}"
+        class="video-container"
+      >
+
+        <iframe
+          src="https://www.youtube-nocookie.com/embed/${videoId}?rel=0&playsinline=1"
+          title="${escapeHtml(exercise.name[language])}"
+          loading="lazy"
+          allowfullscreen
+        ></iframe>
+
+        <a
+          class="youtube-link"
+          href="https://www.youtube.com/watch?v=${videoId}"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          ${t('openYoutube')}
+        </a>
+
+      </div>
+    `;
+  }
+
+
+  return `
+
+    <div class="exercise">
+
+      <div class="exercise-top">
+
+        <input
+          type="checkbox"
+          class="exercise-check"
+          data-exercise="${exerciseKey}"
+          ${checked}
+        >
+
+        <div>
+
+          <div class="exercise-name">
+            ${exercise.name[language]}
+          </div>
+
+          <div class="prescription">
+            ${exercise.prescription[language]}
+          </div>
+
+          ${videoHTML}
+
+        </div>
+
+      </div>
+
+    </div>
+  `;
+}
+
+
+/* =========================================================
+   WEEK NAVIGATION
+========================================================= */
+
+function changeWeek(direction) {
 
   week.setDate(
-    week.getDate() - 7
+    week.getDate() +
+    direction * 7
   );
 
-
   render();
-
-};
-
+}
 
 
-document.getElementById(
-  'next'
-).onclick = () => {
+/* =========================================================
+   CLEAR WEEK
+========================================================= */
 
+function clearWeek() {
 
-  week.setDate(
-    week.getDate() + 7
+  const message =
+    language === 'pt'
+      ? 'Tem certeza que quer apagar todos os registros desta semana?'
+      : 'Are you sure you want to delete all records from this week?';
+
+  if (!confirm(message)) {
+    return;
+  }
+
+  sessions.forEach(
+    session => {
+
+      localStorage.removeItem(
+        storageKey(session.id)
+      );
+    }
   );
 
+  render();
+}
+
+
+/* =========================================================
+   LANGUAGE SWITCH
+========================================================= */
+
+function setLanguage(lang) {
+
+  language = lang;
+
+  localStorage.setItem(
+    'treino-language',
+    lang
+  );
 
   render();
-
-};
-
+}
 
 
-/* ================================================================
-   LIMPAR SEMANA
-   ================================================================ */
+/* =========================================================
+   SECURITY / TEXT ESCAPING
+========================================================= */
 
-document.getElementById(
-  'clearWeek'
-).onclick = () => {
+function escapeHtml(value) {
 
-
-  if (
-    !confirm(
-      'Apagar todos os registros desta semana?'
-    )
-  ) return;
-
-
-  sessions.forEach(s => {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
 
-    localStorage.removeItem(
-      storageKey(s.id)
-    );
-
-  });
-
-
-  render();
-
-};
-
-
-
-/* ================================================================
-   INICIAR
-   ================================================================ */
+/* =========================================================
+   START
+========================================================= */
 
 render();
 
-
 </script>
 
-
 </body>
-
 </html>
